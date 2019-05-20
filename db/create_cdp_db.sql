@@ -6,9 +6,9 @@ EXEC('CREATE SCHEMA cdp;');
 
 GO
 CREATE TABLE cdp.casa_de_apostas(
-	Nome		VARCHAR(20),
+	Nome		VARCHAR(255),
 	Email		VARCHAR(255) NOT NULL,
-	Telefone	VARCHAR(9),
+	Telefone	VARCHAR(20),
 	Site		VARCHAR(2083) NOT NULL,
 	PRIMARY KEY (Nome),
 	UNIQUE		(Email, Telefone, Site)
@@ -113,7 +113,7 @@ CREATE TABLE cdp.faz(
 );
 
 CREATE TABLE cdp.aposta_em(
-	Nome_CAP	VARCHAR(20),
+	Nome_CAP	VARCHAR(255),
 	ID_APOST	INT,
 	NIF_APOST	VARCHAR(9),
 	Email_APOST	VARCHAR(255),
@@ -123,7 +123,7 @@ CREATE TABLE cdp.aposta_em(
 );
 
 CREATE TABLE cdp.disponibiliza(
-	Nome_CAP	VARCHAR(20),
+	Nome_CAP	VARCHAR(255),
 	ID_APOSTA	INT	NOT NULL,
 	Combinacoes_APOSTA	VARCHAR(100),
 	PRIMARY KEY(Nome_CAP, ID_APOSTA),
