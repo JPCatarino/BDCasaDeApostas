@@ -64,8 +64,8 @@ CREATE TABLE cdp.competicao(
 	ID				INT				IDENTITY(1,1),
 	Nome			VARCHAR(255)	NOT NULL,	
 	Pais			VARCHAR(255)	NOT NULL,
-	Data_Inicio		DATETIME		NOT NULL,
-	Data_Fim		DATETIME		NOT NULL,
+	Data_Inicio		DATE			NOT NULL,
+	Data_Fim		DATE			NOT NULL,
 	ID_Desporto		INT				NOT NULL,
 	PRIMARY KEY(ID),
 	CONSTRAINT FK_DESPORTO_COMP FOREIGN KEY(ID_Desporto) REFERENCES cdp.desporto(ID)
