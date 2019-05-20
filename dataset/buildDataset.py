@@ -1,4 +1,5 @@
 import pyodbc
+import random
 from faker import Faker
 
 def connect():
@@ -43,11 +44,28 @@ def add_Casas_de_Apostas(ammount):
         cursor.execute(query)
         cursor.commit()
     disconnect(conn)    
-        
+
+def add_apostadores(ammount):
+    fake = Faker()
+    conn = connect()
+    cursor = conn.cursor()
+    for x in range(0, ammount):
+        email = fake.company_email() 
+        NIF = random.randint(100000000, 999999999)
+        Pnome = fake.first_name()
+        Unome = fake.last_name()
+        telemovel = random.randint(100000000, 999999999)
+        EqFav = fake.color_name()
+        query = "INSERT INTO cdp.apostador (Email, NIF, Primeiro_Nome, Ultimo_Nome, Telemovel, Equipa_Favorita) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (email, NIF, Pnome, Unome, telemovel, EqFav)
+        print(query)
+        cursor.execute(query)
+        cursor.commit()
+    disconnect(conn)     
+
+
+
 add_Casas_de_Apostas(3)
-conn = connect()
-cursor = conn.cursor() 
-cursor.execute('SELECT * FROM cdp.casa_de_apostas')
+add_apostadores(3)
 
 for row in cursor:
     print(row)
