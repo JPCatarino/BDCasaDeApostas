@@ -56,7 +56,8 @@ CREATE TABLE cdp.pagamento(
 CREATE TABLE cdp.desporto(
 	ID				INT				IDENTITY(1,1),
 	Nome			VARCHAR(255)	NOT NULL,
-	PRIMARY KEY(ID)
+	PRIMARY KEY(ID),
+	UNIQUE(Nome)
 );
 
 CREATE TABLE cdp.competicao(
