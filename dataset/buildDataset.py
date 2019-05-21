@@ -78,16 +78,18 @@ def add_clubes(path, desporto):
     with open(path) as dataset:
         reader = csv.DictReader(dataset, delimiter=',')
         for row in reader:
-            if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'"  % (row["home_team"])).rowcount == 0):
-                print(row["home_team"])
-                cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["home_team"], desporto))
+            if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'" % (row["home_team"].replace("'", ""))).rowcount == 0):
+                cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["home_team"].replace("'", ""), desporto))
                 cursor.commit()
             
+            if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'"  % (row["away_team"].replace("'", ""))).rowcount == 0):
+                cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["away_team"].replace("'", ''), desporto))
+                cursor.commit()
+    disconnect(conn)
             
             
 
 #add_Casas_de_Apostas(3)
 #add_apostadores(3)
 #add_desportos()
-print(os.getcwd())
 add_clubes('data/closing_odds.csv', 1)
