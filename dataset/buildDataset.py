@@ -1,5 +1,7 @@
 import pyodbc
 import random
+import csv 
+import os
 from faker import Faker
 
 def connect():
@@ -62,10 +64,30 @@ def add_apostadores(ammount):
         cursor.commit()
     disconnect(conn)     
 
+def add_desportos():
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO cdp.desporto (Nome) VALUES ('Futebol')")
+    cursor.execute("INSERT INTO cdp.desporto (Nome) VALUES ('Basket')")
+    cursor.commit()
+    disconnect(conn)  
 
+def add_clubes(path, desporto):
+    conn = connect()
+    cursor = conn.cursor()
+    with open(path) as dataset:
+        reader = csv.DictReader(dataset, delimiter=',')
+        for row in reader:
+            if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'"  % (row["home_team"])).rowcount == 0):
+                print(row["home_team"])
+                cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["home_team"], desporto))
+                cursor.commit()
+            
+            
+            
 
-add_Casas_de_Apostas(3)
-add_apostadores(3)
-
-for row in cursor:
-    print(row)
+#add_Casas_de_Apostas(3)
+#add_apostadores(3)
+#add_desportos()
+print(os.getcwd())
+add_clubes('data/closing_odds.csv', 1)
