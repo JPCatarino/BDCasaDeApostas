@@ -92,7 +92,7 @@ def add_clubes_futebol(path, desporto, limit):
             if(i == limit):
                 break
     disconnect(conn)
-
+# Bug with unicode chars
 def add_competicao_futebol(path, desporto, limit):
     conn = connect()
     cursor = conn.cursor()
@@ -123,6 +123,24 @@ def add_competicao_futebol(path, desporto, limit):
             cursor.commit()
     disconnect(conn)      
 
+# Has bug with none type
+def add_jogos(path, limit):
+    conn = connect()
+    cursor = conn.cursor()
+    with open(path) as dataset:
+        reader = csv.DictReader(dataset, delimiter = ',')
+        i = 0
+        for row in reader:
+            cursor.execute("SELECT ID FROM cdp.equipa WHERE Nome = '%s'" % (row["home_team"].replace("'", "")))
+            home_team = cursor.fetchone().ID
+            cursor.execute("SELECT ID FROM cdp.equipa WHERE Nome = '%s'" % (row["away_team"].replace("'", "")))
+            away_team = cursor.fetchone().ID
+            liga = row["league"].split(": ")
+            cursor.execute("SELECT ID FROM cdp.competicao WHERE Nome = '%s'" % liga[1].replace("'", ""))
+            liga = cursor.fetchone().ID
+            cursor.execute("INSERT INTO cdp.jogo (Data, ID_casa, ID_fora, ID_competicao) VALUES ('%s', %d, %d, %d)" % (row["match_date"].replace("-", "/"), home_team, away_team, liga))
+            cursor.commit()
+    disconnect()
           
 
 #add_Casas_de_Apostas(3)
@@ -130,3 +148,4 @@ def add_competicao_futebol(path, desporto, limit):
 #add_desportos()
 #add_clubes_futebol('data/closing_odds.csv', 1, 8000)
 #add_competicao_futebol('data/closing_odds.csv', 1, 8000)
+add_jogos('data/closing_odds.csv', 8000)
