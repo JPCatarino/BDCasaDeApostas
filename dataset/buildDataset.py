@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pyodbc
 import random
 import csv 
@@ -72,11 +73,12 @@ def add_desportos():
     cursor.commit()
     disconnect(conn)  
 
-def add_clubes(path, desporto):
+def add_clubes_futebol(path, desporto, limit):
     conn = connect()
     cursor = conn.cursor()
     with open(path) as dataset:
         reader = csv.DictReader(dataset, delimiter=',')
+        i = 0
         for row in reader:
             if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'" % (row["home_team"].replace("'", ""))).rowcount == 0):
                 cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["home_team"].replace("'", ""), desporto))
@@ -85,11 +87,46 @@ def add_clubes(path, desporto):
             if(cursor.execute("SELECT * FROM cdp.equipa WHERE Nome = '%s'"  % (row["away_team"].replace("'", ""))).rowcount == 0):
                 cursor.execute("INSERT INTO cdp.equipa (Nome, ID_desporto) VALUES ('%s', %d)" % (row["away_team"].replace("'", ''), desporto))
                 cursor.commit()
+
+            i = i + 1
+            if(i == limit):
+                break
     disconnect(conn)
-            
-            
+
+def add_competicao_futebol(path, desporto, limit):
+    conn = connect()
+    cursor = conn.cursor()
+    with open(path) as dataset:
+        reader = csv.DictReader(dataset, delimiter=',')    
+        i = 0  
+        ligas = []
+        ligasNomes = []
+        for row in reader:
+            paisLiga = row["league"].split(": ")
+            if(paisLiga[1] not in ligasNomes):
+                ligaDic = {}
+                ligaDic["nome"] = paisLiga[1]
+                ligaDic["pais"] = paisLiga[0]
+                ligaDic["datainicio"] = row["match_date"].replace("-", "/")
+                ligaDic["datafim"] = row["match_date"].replace("-", "/")
+                ligas.append(ligaDic)
+                ligasNomes.append(paisLiga[1])
+            else:
+                for elem in ligas:
+                    if(elem["nome"] == paisLiga[1]):
+                        elem["datafim"] = row["match_date"].replace("-", "/")
+            i = i + 1
+            if(i == limit):
+                break
+        for elem in ligas:
+            cursor.execute("INSERT INTO cdp.competicao (Nome, Pais, Data_Inicio, Data_Fim, ID_Desporto) VALUES ('%s', '%s', '%s', '%s', %d)" % (elem["nome"].replace("'", ""), elem["pais"], elem["datainicio"], elem["datafim"], desporto))
+            cursor.commit()
+    disconnect(conn)      
+
+          
 
 #add_Casas_de_Apostas(3)
 #add_apostadores(3)
 #add_desportos()
-add_clubes('data/closing_odds.csv', 1)
+#add_clubes_futebol('data/closing_odds.csv', 1, 8000)
+#add_competicao_futebol('data/closing_odds.csv', 1, 8000)
