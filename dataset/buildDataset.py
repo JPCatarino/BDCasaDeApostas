@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pyodbc
-import random
+from random import random
 import csv 
 import os
 from faker import Faker
@@ -140,7 +140,34 @@ def add_jogos(path, limit):
             liga = cursor.fetchone().ID
             cursor.execute("INSERT INTO cdp.jogo (Data, ID_casa, ID_fora, ID_competicao) VALUES ('%s', %d, %d, %d)" % (row["match_date"].replace("-", "/"), home_team, away_team, liga))
             cursor.commit()
+            i = i + 1
+            if(i == limit):
+                break
     disconnect()
+
+def generate_odds():
+    return (random() * (7 - 0))
+
+def add_apostas():
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM cdp.jogo")
+    for row in cursor.fetchall():
+        cursor.execute("INSERT INTO cdp.aposta_normal (Descricao, Odds, DataHora) VALUES ('%s', %.4f, '%s')" % ("HOME WIN", generate_odds(), row.Data))
+        cursor.execute("INSERT INTO cdp.aposta_normal (Descricao, Odds, DataHora) VALUES ('%s', %.4f, '%s')" % ("DRAW", generate_odds(), row.Data))
+        cursor.execute("INSERT INTO cdp.aposta_normal (Descricao, Odds, DataHora) VALUES ('%s', %.4f, '%s')" % ("AWAY WIN", generate_odds(), row.Data))
+    cursor.commit()
+    #cursor.execute("SELECT aposta_normal.ID AS ID_Aposta, jogo.ID AS ID_Jogo FROM cdp.aposta_normal FULL OUTER JOIN cdp.jogo ON DataHora = Data")
+    cursor.execute("SELECT ID from cdp.aposta_normal")
+    e = 1
+    rowCount = 1
+    for row in cursor.fetchall():
+        cursor.execute("INSERT INTO cdp.relacionada_com (ID_Aposta, ID_Jogo) VALUES (%d, %d)" % (row.ID, e))
+        cursor.commit()
+        rowCount = rowCount + 1
+        if ((rowCount-1) % 3 == 0):
+            e = e + 1
+    disconnect()    
           
 
 #add_Casas_de_Apostas(3)
@@ -148,4 +175,5 @@ def add_jogos(path, limit):
 #add_desportos()
 #add_clubes_futebol('data/closing_odds.csv', 1, 8000)
 #add_competicao_futebol('data/closing_odds.csv', 1, 8000)
-add_jogos('data/closing_odds.csv', 8000)
+#add_jogos('data/closing_odds.csv', 8000)
+add_apostas()
