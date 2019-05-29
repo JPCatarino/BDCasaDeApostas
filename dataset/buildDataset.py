@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pyodbc
 from random import random
+from random import randint 
 import csv 
 import os
 from faker import Faker
@@ -143,7 +144,7 @@ def add_jogos(path, limit):
             i = i + 1
             if(i == limit):
                 break
-    disconnect()
+    disconnect(conn)
 
 def generate_odds():
     return (random() * (7 - 0))
@@ -167,8 +168,30 @@ def add_apostas():
         rowCount = rowCount + 1
         if ((rowCount-1) % 3 == 0):
             e = e + 1
-    disconnect()    
+    disconnect(conn)    
           
+def associate_apostas_with_casas():
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT Nome from cdp.casa_de_apostas")
+    cdplist = []
+    for row in cursor.fetchall():
+        cdplist.append(row.Nome)
+    print(cdplist)
+    cursor.execute("SELECT ID_Aposta from cdp.relacionada_com")
+    insertCDP = cdplist[randint(0,2)]
+    e = 1
+    for row in cursor.fetchall():
+        print(insertCDP)
+        cursor.execute("INSERT INTO cdp.disponibiliza (Nome_CAP, ID_APOSTA) VALUES ('%s', %d)" % (insertCDP, row.ID_Aposta))
+        cursor.commit()
+        e = e + 1
+        if ((e-1) % 3 == 0):
+            insertCDP = cdplist[randint(0,2)]
+    disconnect(conn)
+
+        
+    
 
 #add_Casas_de_Apostas(3)
 #add_apostadores(3)
@@ -176,4 +199,5 @@ def add_apostas():
 #add_clubes_futebol('data/closing_odds.csv', 1, 8000)
 #add_competicao_futebol('data/closing_odds.csv', 1, 8000)
 #add_jogos('data/closing_odds.csv', 8000)
-add_apostas()
+#add_apostas()
+associate_apostas_with_casas()
