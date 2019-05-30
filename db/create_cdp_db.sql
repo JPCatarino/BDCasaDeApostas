@@ -1,7 +1,8 @@
-CREATE DATABASE SGCasaDeApostas;
+-- CREATE DATABASE SGCasaDeApostas;
 
-GO
-use SGCasaDeApostas;
+-- GO
+-- use SGCasaDeApostas;
+use p3g6;
 EXEC('CREATE SCHEMA cdp;');
 
 GO
@@ -107,7 +108,6 @@ CREATE TABLE cdp.faz(
 	Quantia			MONEY			NOT NULL,
 	-- Escolhas		DISCUTIR COMO REPRESENTAR
 	DataHora		DATETIME		NOT NULL,
-	PRIMARY KEY(ID_apostador, Email_apostador, NIF_apostador, ID_aposta),
 	CONSTRAINT	FK_APOSTADOR_FAZ_DADOS	FOREIGN KEY(ID_apostador, Email_apostador, NIF_apostador) REFERENCES cdp.apostador(ID, Email, NIF), 
 	CONSTRAINT	FK_FAZ_APOSTA_ID		FOREIGN KEY(ID_aposta)	REFERENCES	cdp.aposta_normal(ID),
 	CONSTRAINT	FK_FAZ_APOSTA_IDM		FOREIGN KEY(ID_aposta, Combinacoes_amultipla)	REFERENCES	cdp.aposta_multipla(ID, Combinacoes)
