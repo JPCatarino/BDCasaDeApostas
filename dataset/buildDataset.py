@@ -10,7 +10,8 @@ def connect():
     """ Creates a connection to the database """
     cnx = None
     try:
-        cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+        #cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+        cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p3g6;UID=p3g6;PWD=Javardices123')
 
     except pyodbc.OperationalError:
         print('Unable to make a connection to the mysql database.')
@@ -55,10 +56,10 @@ def add_apostadores(ammount):
     cursor = conn.cursor()
     for x in range(0, ammount):
         email = fake.company_email() 
-        NIF = random.randint(100000000, 999999999)
+        NIF = randint(100000000, 999999999)
         Pnome = fake.first_name()
         Unome = fake.last_name()
-        telemovel = random.randint(100000000, 999999999)
+        telemovel = randint(100000000, 999999999)
         EqFav = fake.color_name()
         query = "INSERT INTO cdp.apostador (Email, NIF, Primeiro_Nome, Ultimo_Nome, Telemovel, Equipa_Favorita) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (email, NIF, Pnome, Unome, telemovel, EqFav)
         print(query)
@@ -190,14 +191,38 @@ def associate_apostas_with_casas():
             insertCDP = cdplist[randint(0,2)]
     disconnect(conn)
 
+def associate_apostas_with_apostador(ammount):
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * from cdp.aposta_normal")
+    for row in cursor.fetchall():
+        nmApostadores = randint(1,ammount)
+        connAux = connect()
+        cursorAux = connAux.cursor()
+        apostadoresAp = []
+        dthr = row.DataHora
+        for i in range(nmApostadores):
+            cursorAux.execute("SELECT ID, Email, NIF from cdp.apostador WHERE ID = %d" % (randint(1,ammount)))
+            apostador = cursorAux.fetchone()
+            connIns = connect()
+            cursorIns = connIns.cursor()
+            cursorIns.execute("INSERT INTO cdp.faz (ID_apostador, Email_apostador, NIF_apostador, ID_aposta, Quantia, DataHora) VALUES (%d, '%s', '%s', %d, %d, '%s')" % (apostador.ID, apostador.Email, apostador.NIF, row.ID, randint(1,300), dthr))
+            cursorIns.commit()
+    disconnect(conn)
+    disconnect(connAux)
+    disconnect(connIns)
+
+            
+
         
     
 
-#add_Casas_de_Apostas(3)
-#add_apostadores(3)
+#add_Casas_de_Apostas(10)
+#add_apostadores(20)
 #add_desportos()
 #add_clubes_futebol('data/closing_odds.csv', 1, 8000)
 #add_competicao_futebol('data/closing_odds.csv', 1, 8000)
 #add_jogos('data/closing_odds.csv', 8000)
-#add_apostas()
+add_apostas()
 associate_apostas_with_casas()
+associate_apostas_with_apostador(20)
