@@ -15,15 +15,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace BDCasasApostasGUI
 {
     public partial class Form1 : Form
     {
+
+       
+
+        private const string ConnectionString = ("Data Source = " + "tcp:mednat.ieeta.pt\\SQLSERVER,8101" + " ;" + "Initial Catalog = " + "p3g6" +
+       "; uid = " + "p3g6" + ";" + "password = " + "Javardices123");
+        private SqlConnection cn;
         public Form1()
         {
+            cn = getSGBDConnection();
             InitializeComponent();
             MenuTest();
+        }
+
+     
+
+        /*private void Form1_Load(object sender, EventArgs e)
+        {
+            cn = getSGBDConnection();
+            
+        }
+        */
+
+         private SqlConnection getSGBDConnection() 
+        {
+            return new SqlConnection(ConnectionString);
+        }
+
+        private bool verifySGBDConnection() 
+        {
+            if (cn == null)
+                cn = getSGBDConnection();
+
+            if (cn.State != ConnectionState.Open)
+                cn.Open();
+
+            return cn.State == ConnectionState.Open;
         }
 
         private void button1_Click(object sender, EventArgs e)
