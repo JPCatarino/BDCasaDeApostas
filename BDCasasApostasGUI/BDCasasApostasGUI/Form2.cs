@@ -26,5 +26,30 @@ namespace BDCasasApostasGUI
         {
 
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var novoJogoForm = new Form3();
+            novoJogoForm.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            var removeJogoForm = new RemoverJogo();
+            removeJogoForm.Show();
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var listaJogosApostador = new listaJogosApostadorX();
+            listaJogosApostador.Show();
+
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
