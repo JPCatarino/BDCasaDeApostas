@@ -10,29 +10,14 @@ using System.Windows.Forms;
 
 namespace BDCasasApostasGUI
 {
-    public partial class Form3 : Form
+    public partial class NovaCasa : Form
     {
-        public Form3()
+        public NovaCasa()
         {
             InitializeComponent();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
         {
 
         }
