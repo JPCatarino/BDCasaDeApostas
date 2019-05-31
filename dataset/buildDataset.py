@@ -5,13 +5,16 @@ from random import randint
 import csv 
 import os
 from faker import Faker
+import sys
 
 def connect():
     """ Creates a connection to the database """
     cnx = None
     try:
-        #cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
-        cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p3g6;UID=p3g6;PWD=Javardices123')
+        if(sys.argv[1] == "local"):
+            cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+        else:
+            cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p3g6;UID=p3g6;PWD=Javardices123')
 
     except pyodbc.OperationalError:
         print('Unable to make a connection to the mysql database.')
@@ -204,9 +207,13 @@ def associate_apostas_with_apostador(ammount):
         for i in range(nmApostadores):
             cursorAux.execute("SELECT ID, Email, NIF from cdp.apostador WHERE ID = %d" % (randint(1,ammount)))
             apostador = cursorAux.fetchone()
+            cursorAux.execute("SELECT Nome_CAP FROM cdp.disponibiliza WHERE ID_APOSTA = %d" % row.ID)
+            nomeCAP = cursorAux.fetchone()
             connIns = connect()
             cursorIns = connIns.cursor()
             cursorIns.execute("INSERT INTO cdp.faz (ID_apostador, Email_apostador, NIF_apostador, ID_aposta, Quantia, DataHora) VALUES (%d, '%s', '%s', %d, %d, '%s')" % (apostador.ID, apostador.Email, apostador.NIF, row.ID, randint(1,300), dthr))
+            if cursorAux.execute("SELECT * from cdp.aposta_em WHERE Nome_CAP = '%s' and ID_APOST = %d" % (nomeCAP.Nome_CAP, apostador.ID)).rowcount == 0:
+                cursorIns.execute("INSERT INTO cdp.aposta_em (Nome_CAP, ID_APOST, NIF_APOST, Email_APOST) VALUES ('%s', %d, '%s', '%s')" % (nomeCAP.Nome_CAP, apostador.ID, apostador.NIF, apostador.Email))
             cursorIns.commit()
     disconnect(conn)
     disconnect(connAux)
@@ -223,6 +230,6 @@ def associate_apostas_with_apostador(ammount):
 #add_clubes_futebol('data/closing_odds.csv', 1, 8000)
 #add_competicao_futebol('data/closing_odds.csv', 1, 8000)
 #add_jogos('data/closing_odds.csv', 8000)
-add_apostas()
-associate_apostas_with_casas()
-associate_apostas_with_apostador(20)
+#add_apostas()
+#associate_apostas_with_casas()
+associate_apostas_with_apostador(3)
