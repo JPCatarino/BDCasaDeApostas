@@ -58,7 +58,11 @@ namespace BDCasasApostasGUI
         }
         private void FileNew_clicked(object sender, EventArgs e)
         {
-            MessageBox.Show("New", "MENU_CREATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //   MessageBox.Show("New", "MENU_CREATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var novaCasa = new NovaCasa();
+            novaCasa.Show();
+
+
         }
         private void FileOpen_clicked(object sender, EventArgs e)
         {
