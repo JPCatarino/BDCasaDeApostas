@@ -13,6 +13,8 @@ def connect():
     try:
         if(sys.argv[1] == "local"):
             cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+        elif(sys.argv[1] = "oscar"):
+            cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=HP\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
         else:
             cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p3g6;UID=p3g6;PWD=Javardices123')
 
