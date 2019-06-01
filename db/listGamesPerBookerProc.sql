@@ -14,5 +14,5 @@ AS
 	
 	--Lista as apostas
 	--TODO: das apostas sacar os jogos
-	SELECT * FROM cdp.aposta_normal LEFT JOIN cdp.aposta_em ON Nome_CAP = @Name_Booker GROUP BY ID, Descricao, Odds, DataHora;
+	SELECT ID, Descricao, Odds, DataHora FROM cdp.aposta_normal LEFT JOIN cdp.disponibiliza ON Nome_CAP = @Name_Booker GROUP BY ID, Descricao, Odds, DataHora;
 GO
