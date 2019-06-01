@@ -54,6 +54,10 @@ namespace BDCasasApostasGUI
             cm.CommandType = CommandType.StoredProcedure;
 
             cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.Text;
+            
+            //Deve ser usada esta de baixo, mas falta meter apostadores por casa.
+            //cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedValue.ToString();
+
 
             try
             {
