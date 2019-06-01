@@ -12,13 +12,14 @@ BEGIN
 	DECLARE @CompDataFim DATETIME;
 	SELECT @CompDataFim = Data_Fim FROM cdp.competicao WHERE ID = @Comp_ID;
 
-	IF @GameDAte BETWEEN @CompDataInicio and @CompDataFim
+	IF @GameDate BETWEEN @CompDataInicio and @CompDataFim
 	BEGIN
 		RETURN 1
 	END
 	RETURN 0
 END
 GO
+
 
 -- Aux Function to check if a given parameter is not null
 CREATE FUNCTION utils.IsNullOrEmpty(@toCheck VARCHAR(MAX)) RETURNS bit AS
