@@ -11,9 +11,9 @@ using System.Data.SqlClient;
 
 namespace BDCasasApostasGUI
 {
-    public partial class NovaCasa : Form
+    public partial class Form4 : Form
     {
-        public NovaCasa()
+        public Form4()
         {
             InitializeComponent();
         }
@@ -27,15 +27,12 @@ namespace BDCasasApostasGUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             cn1.Open();
-            SqlCommand cm = new SqlCommand("cdp.AddBooker1", cn1);
+            SqlCommand cm = new SqlCommand("cdp.RemoveBooker", cn1);
             cm.CommandType = CommandType.StoredProcedure;
 
             cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = textBox1.Text;
-            cm.Parameters.Add("@Email_Booker", SqlDbType.VarChar).Value = textBox2.Text;
-            cm.Parameters.Add("@Teleph_Booker", SqlDbType.VarChar).Value = textBox3.Text;
-            cm.Parameters.Add("@Site_Booker", SqlDbType.VarChar).Value = textBox4.Text;
+            
 
             try
             {
@@ -43,7 +40,7 @@ namespace BDCasasApostasGUI
 
                 while (dr.Read())
                 {
-                    
+                    //MessageBox.Show("Casa removida com sucesso!", " ", MessageBoxButtons.OK);
 
                 }
                 dr.Close();

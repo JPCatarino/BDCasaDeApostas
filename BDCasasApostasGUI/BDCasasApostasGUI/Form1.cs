@@ -118,6 +118,12 @@ namespace BDCasasApostasGUI
             novaCasa.Show();
 
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var removeCasa = new Form4();
+            removeCasa.Show();
+        }
     }
 
 }
