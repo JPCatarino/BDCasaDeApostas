@@ -33,3 +33,17 @@ AS
 GO
 
 --drop procedure AddBooker1
+
+use p3g6;
+go
+--A procedure that adds a Booker to the list
+CREATE PROCEDURE cdp.RemoveBooker @Name_Booker  VARCHAR(255) 
+AS
+	IF @Name_Booker is NULL
+	BEGIN 
+		PRINT 'Insert the Name of the Booker'
+		RETURN 0
+	END
+
+	delete from cdp.casa_de_apostas where Nome = @Name_Booker;
+GO
