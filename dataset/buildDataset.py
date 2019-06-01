@@ -11,10 +11,11 @@ def connect():
     """ Creates a connection to the database """
     cnx = None
     try:
-        if(sys.argv[1] == "local"):
-            cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
-        elif(sys.argv[1] == "oscar"):
-            cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=HP\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+        if(len(sys.argv) > 1):
+            if(sys.argv[1] == "local"):
+                cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=SURFACEJPC\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
+            elif(sys.argv[1] == "oscar"):
+                cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=HP\SQLEXPRESS;DATABASE=SGCasaDeApostas;UID=testUser;PWD=testing')
         else:
             cnx = pyodbc.connect('DRIVER={SQL Server};SERVER=tcp:mednat.ieeta.pt\SQLSERVER,8101;DATABASE=p3g6;UID=p3g6;PWD=Javardices123')
 
@@ -215,7 +216,7 @@ def associate_apostas_with_apostador(ammount):
             cursorIns = connIns.cursor()
             cursorIns.execute("INSERT INTO cdp.faz (ID_apostador, Email_apostador, NIF_apostador, ID_aposta, Quantia, DataHora) VALUES (%d, '%s', '%s', %d, %d, '%s')" % (apostador.ID, apostador.Email, apostador.NIF, row.ID, randint(1,300), dthr))
             #if cursorAux.execute("SELECT * from cdp.aposta_em WHERE Nome_CAP = '%s' and ID_APOST = %d" % (nomeCAP.Nome_CAP, apostador.ID)).rowcount == 0:
-                #cursorIns.execute("INSERT INTO cdp.aposta_em (Nome_CAP, ID_APOST, NIF_APOST, Email_APOST) VALUES ('%s', %d, '%s', '%s')" % (nomeCAP.Nome_CAP, apostador.ID, apostador.NIF, apostador.Email))
+                #cursorIns.execute("INSERT INTO cdp.aposta_em (Nome_CAP, ID_APOST, NIF_APOST, Email_APOST) VALUES ('%s', %d, '%s', '%s')" % (nomeCAP.Nome_CAP, apostador.ID, apostador.NIF, apostador.Email))           LINES NOT NEEDED WITH TRIGGER
             cursorIns.commit()
     disconnect(conn)
     disconnect(connAux)
