@@ -43,7 +43,7 @@ AS
 
 	SELECT [@auxJogos].ID_Jogo, Nome_casa, Nome_fora, Data
 	FROM @auxJogos INNER JOIN 
-	(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa LEFT JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
+	(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa INNER JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
 	ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
 GO
 
@@ -55,8 +55,11 @@ AS
 		PRINT 'Insert the ID of the Game'
 		RETURN 0
 	END
-	SELECT Descricao, Odds, DataHora FROM cdp.aposta_normal LEFT JOIN cdp.
+
+	 SELECT Descricao, Odds, DataHora FROM cdp.aposta_normal INNER JOIN 
+	(SELECT * FROM cdp.relacionada_com  WHERE relacionada_com.ID_Jogo = @ID_Game) AS apostas ON ID = apostas.ID_Aposta 
 GO 
+
 
 -- Stored Proc to get competition id given name
 CREATE PROCEDURE cdp.GetCompetitionID (@Name_Comp VARCHAR(255), @ID_Comp INT OUTPUT)
