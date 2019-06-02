@@ -60,6 +60,27 @@ AS
 	(SELECT * FROM cdp.relacionada_com  WHERE relacionada_com.ID_Jogo = @ID_Game) AS apostas ON ID = apostas.ID_Aposta 
 GO 
 
+-- Stored Proc to check available competitions on a given booker
+CREATE PROCEDURE cdp.ListAvailableCompetitionsOnBooker @Name_Booker VARCHAR(255)
+AS
+	IF @Name_Booker is NULL
+	BEGIN 
+		PRINT 'Insert the Name of the Booker'
+		RETURN 0
+	END
+	
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_Competicao INT);
+
+	INSERT INTO @auxJogos (ID_Jogo, ID_Competicao) 
+	SELECT ID ,ID_competicao 
+	FROM cdp.jogo INNER JOIN 
+	(SELECT ID_Jogo FROM cdp.relacionada_com INNER JOIN cdp.disponibiliza ON relacionada_com.ID_aposta = disponibiliza.ID_APOSTA AND Nome_CAP = @Name_Booker GROUP BY ID_Jogo) AS bookerGames 
+	ON jogo.ID = bookerGames.ID_Jogo;
+
+	SELECT Nome FROM cdp.competicao RIGHT JOIN @auxJogos ON competicao.ID = [@auxJogos].ID_Competicao GROUP BY Nome;
+GO
 
 -- Stored Proc to get competition id given name
 CREATE PROCEDURE cdp.GetCompetitionID (@Name_Comp VARCHAR(255), @ID_Comp INT OUTPUT)
@@ -71,6 +92,7 @@ AS
 	SELECT @ID_Comp = ID FROM cdp.competicao WHERE Nome = @Name_Comp;
 GO
 
+-- Stored Proc to get Team ID
 CREATE PROCEDURE cdp.GetTeamID (@Name_Team VARCHAR(50), @ID_Team INT OUTPUT)
 AS
 	if utils.IsNullOrEmpty(@Name_Team) = 1
@@ -173,3 +195,45 @@ AS
 GO
 
 -- DROP PROCEDURE cdp.AddNewGameAndBets;
+-- Stored proc to list game per competition
+CREATE PROCEDURE cdp.ListGamesPerCompetition @Name_Booker VARCHAR(255), @Name_Comp VARCHAR(255)
+AS
+	if utils.IsNullOrEmpty(@Name_Comp) = 1
+	BEGIN
+		print 'Missing competition name' 
+		return 0
+	END 
+
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_casa INT,
+		ID_fora INT,
+		Data	DATETIME);
+
+	DECLARE @ID_Comp INT;
+
+	EXEC cdp.GetCompetitionID @Name_Comp, @ID_Comp OUTPUT;
+
+	if utils.IsNullOrEmpty(@Name_Booker) = 1
+	BEGIN
+		INSERT INTO @auxJogos (ID_Jogo, ID_casa, ID_fora, Data) 
+		SELECT ID ,ID_casa, ID_fora, Data 
+		FROM cdp.jogo WHERE jogo.ID_competicao = @ID_Comp
+	END 
+	else
+	BEGIN
+		INSERT INTO @auxJogos (ID_Jogo, ID_casa, ID_fora, Data) 
+		SELECT ID ,ID_casa, ID_fora, Data 
+		FROM cdp.jogo INNER JOIN 
+		(SELECT ID_Jogo FROM cdp.relacionada_com INNER JOIN cdp.disponibiliza ON relacionada_com.ID_aposta = disponibiliza.ID_APOSTA AND Nome_CAP = @Name_Booker GROUP BY ID_Jogo) AS bookerGames 
+		ON jogo.ID = bookerGames.ID_Jogo WHERE jogo.ID_competicao = @ID_Comp;
+	END
+
+	SELECT [@auxJogos].ID_Jogo, Nome_casa, Nome_fora, Data
+		FROM @auxJogos INNER JOIN 
+		(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa INNER JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
+		ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
+GO
+
+
+exec cdp.ListGamesPerCompetition '','Premier League'
