@@ -41,22 +41,22 @@ AS
 	(SELECT ID_Jogo FROM cdp.relacionada_com INNER JOIN cdp.disponibiliza ON relacionada_com.ID_aposta = disponibiliza.ID_APOSTA AND Nome_CAP = @Name_Booker GROUP BY ID_Jogo) AS bookerGames 
 	ON jogo.ID = bookerGames.ID_Jogo;
 
-	SELECT Nome_casa, Nome_fora, Data 
+	SELECT [@auxJogos].ID_Jogo, Nome_casa, Nome_fora, Data
 	FROM @auxJogos INNER JOIN 
 	(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa LEFT JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
 	ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
 GO
 
 -- Stored Proc to list bets available for a given game 
---CREATE PROCEDURE cdp.ListAvailableBetsForGame @ID_Game INT
---AS
---	IF @ID_Game is NULL
---	BEGIN
---		PRINT 'Insert the ID of the Game'
---		RETURN 0
---	END
---	SELECT Descricao, Odds, DataHora FROM cdp.aposta_normal LEFT JOIN cdp.
---GO 
+CREATE PROCEDURE cdp.ListAvailableBetsForGame @ID_Game INT
+AS
+	IF @ID_Game is NULL
+	BEGIN
+		PRINT 'Insert the ID of the Game'
+		RETURN 0
+	END
+	SELECT Descricao, Odds, DataHora FROM cdp.aposta_normal LEFT JOIN cdp.
+GO 
 
 -- Stored Proc to get competition id given name
 CREATE PROCEDURE cdp.GetCompetitionID (@Name_Comp VARCHAR(255), @ID_Comp INT OUTPUT)
