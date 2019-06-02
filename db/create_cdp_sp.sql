@@ -22,6 +22,31 @@ AS
 	SELECT Primeiro_Nome, Ultimo_Nome, Telemovel, NIF  FROM cdp.apostador LEFT JOIN cdp.aposta_em ON Nome_CAP = @Name_Booker GROUP BY Primeiro_Nome, Ultimo_Nome, Telemovel, NIF;
 GO
 
+-- Stored Proc to list game with available bets per booker 
+CREATE PROCEDURE cdp.ListAvailableGamesPerBooker @Name_Booker VARCHAR(255)
+AS
+	if utils.IsNullOrEmpty(@Name_Booker) = 1
+	BEGIN
+		RETURN 0
+	END
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_casa INT,
+		ID_fora INT,
+		Data	DATETIME);
+
+	INSERT INTO @auxJogos (ID_Jogo, ID_casa, ID_fora, Data) 
+	SELECT ID ,ID_casa, ID_fora, Data 
+	FROM cdp.jogo INNER JOIN 
+	(SELECT ID_Jogo FROM cdp.relacionada_com INNER JOIN cdp.disponibiliza ON relacionada_com.ID_aposta = disponibiliza.ID_APOSTA AND Nome_CAP = @Name_Booker GROUP BY ID_Jogo) AS bookerGames 
+	ON jogo.ID = bookerGames.ID_Jogo;
+
+	SELECT Nome_casa, Nome_fora, Data 
+	FROM @auxJogos INNER JOIN 
+	(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa LEFT JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
+	ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
+GO
+
 -- Stored Proc to list bets available for a given game 
 --CREATE PROCEDURE cdp.ListAvailableBetsForGame @ID_Game INT
 --AS
