@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            comboBox1 = new System.Windows.Forms.ComboBox();
             this.ListaCasaX = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.populate = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -43,7 +44,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
-            this.populate = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -52,13 +52,13 @@
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(27, 54);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(214, 24);
-            this.comboBox1.TabIndex = 0;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new System.Drawing.Point(27, 54);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new System.Drawing.Size(214, 24);
+            comboBox1.TabIndex = 0;
+            comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // ListaCasaX
             // 
@@ -75,7 +75,7 @@
             this.panel1.Controls.Add(this.populate);
             this.panel1.Controls.Add(this.flowLayoutPanel1);
             this.panel1.Controls.Add(this.button7);
-            this.panel1.Controls.Add(this.comboBox1);
+            this.panel1.Controls.Add(comboBox1);
             this.panel1.Controls.Add(this.flowLayoutPanel2);
             this.panel1.Controls.Add(this.flowLayoutPanel3);
             this.panel1.Controls.Add(this.ListaCasaX);
@@ -83,6 +83,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(712, 630);
             this.panel1.TabIndex = 2;
+            // 
+            // populate
+            // 
+            this.populate.Location = new System.Drawing.Point(27, 124);
+            this.populate.Name = "populate";
+            this.populate.Size = new System.Drawing.Size(167, 42);
+            this.populate.TabIndex = 12;
+            this.populate.Text = "Mete lista na Dropdown (provisorio)";
+            this.populate.UseVisualStyleBackColor = true;
+            this.populate.Click += new System.EventHandler(this.populate_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -141,6 +151,7 @@
             this.button2.TabIndex = 2;
             this.button2.Text = "Lista de jogos da Casa";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button4
             // 
@@ -180,6 +191,7 @@
             this.button3.TabIndex = 3;
             this.button3.Text = "Lista de Competições";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button8
             // 
@@ -199,16 +211,6 @@
             this.button9.Text = "Remover Competição";
             this.button9.UseVisualStyleBackColor = true;
             // 
-            // populate
-            // 
-            this.populate.Location = new System.Drawing.Point(27, 124);
-            this.populate.Name = "populate";
-            this.populate.Size = new System.Drawing.Size(167, 42);
-            this.populate.TabIndex = 12;
-            this.populate.Text = "Mete lista na Dropdown (provisorio)";
-            this.populate.UseVisualStyleBackColor = true;
-            this.populate.Click += new System.EventHandler(this.populate_Click);
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -226,8 +228,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ListBox ListaCasaX;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button1;
@@ -243,5 +243,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Button populate;
+        public  static System.Windows.Forms.ComboBox comboBox1;
     }
 }

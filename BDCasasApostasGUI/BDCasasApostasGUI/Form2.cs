@@ -53,7 +53,7 @@ namespace BDCasasApostasGUI
             SqlCommand cm = new SqlCommand("cdp.ListBettersPerBooker", cn1);
             cm.CommandType = CommandType.StoredProcedure;
 
-            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.Text;
+            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedItem.ToString();
             
             //Deve ser usada esta de baixo, mas falta meter apostadores por casa.
             //cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedValue.ToString();
@@ -74,7 +74,7 @@ namespace BDCasasApostasGUI
                 }
                 dr.Close();
                 dr.Dispose();
-                cn1.Close();
+                //cn1.Close();
 
             }
             catch (Exception ex)
@@ -142,6 +142,47 @@ namespace BDCasasApostasGUI
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+        }
+
+            private void button2_Click(object sender, EventArgs e)
+        {
+            //cn1.Open();
+            // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
+
+            SqlCommand cm = new SqlCommand("cdp.ListAvailableGamesPerBooker", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
+
+            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedItem.ToString();
+            //cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.Text;
+
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    ListaCasaX.Items.Add(dr["ID_Jogo"]);
+                    ListaCasaX.Items.Add(dr["Nome_Casa"]);
+                    ListaCasaX.Items.Add("VS");
+                    ListaCasaX.Items.Add(dr["Nome_Fora"]);
+                    ListaCasaX.Items.Add(" ");
+                   
+                }
+                dr.Close();
+                dr.Dispose();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }
