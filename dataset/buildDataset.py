@@ -222,7 +222,20 @@ def associate_apostas_with_apostador(ammount):
     disconnect(connAux)
     disconnect(connIns)
 
-            
+def add_jogos_score(limit, path):
+    conn = connect()
+    cursor = conn.cursor()
+    with open(path) as dataset:
+        reader = csv.DictReader(dataset, delimiter = ',')
+        i = 1
+        for row in reader:
+            cursor.execute("UPDATE cdp.jogo SET score_casa = %d, score_fora = %d, finished = 1 WHERE ID = %d" % (int(row["home_score"]), int(row["away_score"]), i))
+            cursor.commit()
+            i = i + 1
+            if(i == limit):
+                break
+    disconnect(conn)
+
 
         
     
@@ -235,4 +248,5 @@ def associate_apostas_with_apostador(ammount):
 #add_jogos('data/closing_odds.csv', 8000)
 #add_apostas()
 #associate_apostas_with_casas()
-associate_apostas_with_apostador(3)
+#associate_apostas_with_apostador(3)
+add_jogos_score(8000, 'data/closing_odds.csv')
