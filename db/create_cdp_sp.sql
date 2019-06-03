@@ -234,6 +234,3 @@ AS
 		(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa INNER JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
 		ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
 GO
-
-
-exec cdp.ListGamesPerCompetition '','Premier League'
