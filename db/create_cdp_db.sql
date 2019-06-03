@@ -49,7 +49,8 @@ CREATE TABLE cdp.pagamento(
 	ID_apostador	INT			 NOT NULL,
 	Email_apostador	VARCHAR(255) NOT NULL,
 	NIF_apostador	VARCHAR(9)	 NOT NULL,
-	Metodo			VARCHAR(40)	CHECK (Metodo in ('MBWay', 'Cartão de Crédito', 'PayPal'))	NOT NULL,  -- Deve ser mudado para métodos de pagamento pré definidos.
+	Metodo			VARCHAR(40)	CHECK (Metodo in ('MBWay', 'Cartão de Crédito', 'PayPal')),
+	pagamento_feito	bit			 DEFAULT (0),
 	PRIMARY KEY(Referencia,NIF_apostador),
 	CONSTRAINT FK_DADOS_AP_PAGAMENTO FOREIGN KEY(ID_apostador, Email_apostador, NIF_apostador) REFERENCES cdp.apostador(ID, Email, NIF)
 );
