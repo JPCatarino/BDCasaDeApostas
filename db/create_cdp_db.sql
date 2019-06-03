@@ -82,7 +82,7 @@ CREATE TABLE cdp.equipa(
 );
 
 CREATE TABLE cdp.jogador(
-	Nome			VARCHAR(20),
+	Nome			VARCHAR(255),
 	Posicao			VARCHAR(30) CHECK (Posicao in ('Goalkeeper','Defender', 'Midfielder', 'Forward')),
 	Equipa_Atual	INT,
 	CONSTRAINT FK_JOGADOR_EQUIPA	FOREIGN KEY(Equipa_Atual) REFERENCES cdp.equipa(ID)
