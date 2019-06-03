@@ -236,7 +236,31 @@ def add_jogos_score(limit, path):
                 break
     disconnect(conn)
 
+# 3 guarda redes, 6 defesas, 7 meds, 6 avançados
+# 'Goalkeeper','Defender', 'Midfielder', 'Forward'
+def add_jogadores():
+    conn = connect() 
+    cursor = conn.cursor()
+    cursor.execute("SELECT ID FROM cdp.equipa")
+    fake = Faker()
 
+    newConn = connect()
+    cursorAux = newConn.cursor()
+    for row in cursor.fetchall(): 
+        for i in range(3):
+            cursorAux.execute("INSERT INTO cdp.jogador (Nome, Posicao, Equipa_Atual) VALUES ('%s', '%s', %d);" % (fake.name(), "Goalkeeper", row.ID))
+        cursorAux.commit()
+        for i in range(6):
+            cursorAux.execute("INSERT INTO cdp.jogador (Nome, Posicao, Equipa_Atual) VALUES ('%s', '%s', %d);" % (fake.name(), "Defender", row.ID))
+        cursorAux.commit()
+        for i in range(7):
+            cursorAux.execute("INSERT INTO cdp.jogador (Nome, Posicao, Equipa_Atual) VALUES ('%s', '%s', %d);" % (fake.name(), "Midfielder", row.ID))
+        cursorAux.commit()
+        for i in range(6):
+            cursorAux.execute("INSERT INTO cdp.jogador (Nome, Posicao, Equipa_Atual) VALUES ('%s', '%s', %d);" % (fake.name(), "Forward", row.ID))
+        cursorAux.commit()
+    disconnect(conn)
+    disconnect(newConn)
         
     
 
@@ -249,4 +273,5 @@ def add_jogos_score(limit, path):
 #add_apostas()
 #associate_apostas_with_casas()
 #associate_apostas_with_apostador(3)
-add_jogos_score(8000, 'data/closing_odds.csv')
+#add_jogos_score(8000, 'data/closing_odds.csv')
+add_jogadores()
