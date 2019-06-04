@@ -184,5 +184,15 @@ namespace BDCasasApostasGUI
             }
 
         }
+
+        private void Form2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

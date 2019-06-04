@@ -124,6 +124,34 @@ namespace BDCasasApostasGUI
             var removeCasa = new Form4();
             removeCasa.Show();
         }
+
+        
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            var novaCasa = new NovaCasa();
+            novaCasa.Show();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var removeCasa = new Form4();
+            removeCasa.Show();
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            var casas = new Form2();
+            casas.Show();
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            var infoeq = new infoequipas();
+            infoeq.Show();
+
+        }
     }
 
 }

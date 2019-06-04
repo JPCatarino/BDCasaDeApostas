@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +71,12 @@
     <Compile Include="Form4.Designer.cs">
       <DependentUpon>Form4.cs</DependentUpon>
     </Compile>
+    <Compile Include="infoequipas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="infoequipas.Designer.cs">
+      <DependentUpon>infoequipas.cs</DependentUpon>
+    </Compile>
     <Compile Include="listaJogosApostadorX.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="infoequipas.resx">
+      <DependentUpon>infoequipas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="listaJogosApostadorX.resx">
       <DependentUpon>listaJogosApostadorX.cs</DependentUpon>
