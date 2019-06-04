@@ -44,3 +44,35 @@ GO
 --	SELECT @DataJogo = Data from deleted;
 	
 --	if GETDATE() < DATEADD(day,30,@DataJogo)
+
+-- Trigger to rollback insert or update in case the team already has 22 players 
+CREATE TRIGGER cdp.OnlyAllowTTPlayersPerTeam ON cdp.[jogador]
+AFTER INSERT, UPDATE
+AS
+	DECLARE @playerCount INT;
+	DECLARE @teamID INT;
+	DECLARE @OldTeamID INT;
+
+	SELECT @teamID = Equipa_Atual FROM inserted;
+	SELECT @OldTeamID = Equipa_Atual FROM deleted;
+
+	if @teamID = @OldTeamID 
+	BEGIN
+		RAISERROR('O jogador já pertence a essa equipa', 16, 1)
+		ROLLBACK TRAN;
+		RETURN;
+	END
+
+	SELECT @playerCount = COUNT(Nome) FROM cdp.jogador WHERE Equipa_Atual = @teamID;
+
+	IF @playerCount >= 22
+	BEGIN
+		RAISERROR('O jogador não pode ser adicionado pois a equipa já tem 22 jogadores', 16, 1)
+		ROLLBACK TRAN; 
+		RETURN;
+	END
+GO
+
+-- DROP TRIGGER cdp.OnlyAllowTTPlayersPerTeam;
+
+
