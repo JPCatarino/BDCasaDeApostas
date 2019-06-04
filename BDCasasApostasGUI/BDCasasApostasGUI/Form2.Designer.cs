@@ -51,6 +51,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.populate = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +78,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button10);
+            this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.button9);
             this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button3);
@@ -99,7 +103,7 @@
             this.panel1.Controls.Add(this.ListaCasaX);
             this.panel1.Location = new System.Drawing.Point(28, 32);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1239, 630);
+            this.panel1.Size = new System.Drawing.Size(1239, 741);
             this.panel1.TabIndex = 2;
             // 
             // button9
@@ -319,11 +323,34 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // button10
+            // 
+            this.button10.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button10.BackgroundImage")));
+            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button10.Location = new System.Drawing.Point(66, 607);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(79, 80);
+            this.button10.TabIndex = 22;
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.label10.Location = new System.Drawing.Point(37, 690);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(149, 48);
+            this.label10.TabIndex = 23;
+            this.label10.Text = "Lista de jogos \r\npor competição";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1277, 693);
+            this.ClientSize = new System.Drawing.Size(1277, 815);
             this.Controls.Add(this.panel1);
             this.Name = "Form2";
             this.Text = "Informação Casas";
@@ -357,6 +384,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Label label10;
         public static System.Windows.Forms.ComboBox comboBox1;
     }
 }
