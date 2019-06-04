@@ -245,13 +245,32 @@ AS
 
 	if utils.IsNullOrEmpty(@CompID) = 1
 	BEGIN
-	INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID, NULL), cdp.teamLosses(@TeamID, NULL), cdp.teamDraws(@TeamID, NULL))
+		INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID, NULL), cdp.teamLosses(@TeamID, NULL), cdp.teamDraws(@TeamID, NULL))
 	END
 	ELSE
 	BEGIN
 		INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID, @CompID), cdp.teamLosses(@TeamID, @CompID), cdp.teamDraws(@TeamID, @CompID))
 	END
 	SELECT Wins, Losses, Draws from @WLD;
+GO
+
+-- Stored Procedure to return scored and suff goals
+CREATE PROCEDURE cdp.listScoredAndSuffGoals (@TeamID INT, @CompID INT = NULL)
+AS
+	DECLARE @SSG TABLE(
+	SCORED  INT,
+	SUFF	INT);
+
+	if utils.IsNullOrEmpty(@CompID) = 1
+	BEGIN
+		INSERT INTO @SSG (SCORED, SUFF) VALUES (cdp.teamScoredGoals(@TeamID, NULL) , cdp.teamSuffGoals(@TeamID, NULL))
+	END
+	ELSE
+	BEGIN
+		INSERT INTO @SSG (SCORED, SUFF) VALUES (cdp.teamScoredGoals(@TeamID, @CompID) , cdp.teamSuffGoals(@TeamID, @CompID))
+	END
+
+	SELECT SCORED, SUFF from @SSG
 GO
 
 -- Stored Procedure to list all players belonging to a team
