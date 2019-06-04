@@ -314,7 +314,7 @@ AS
 GO
 
 -- Stored Proc that returns every available competition
-CREATE PROCEDURE listAllCompetitions
+CREATE PROCEDURE cdp.listAllCompetitions
 AS
 	SELECT ID, Nome from cdp.competicao;
 GO
