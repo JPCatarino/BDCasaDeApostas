@@ -274,6 +274,16 @@ AS
 GO
 
 -- Stored Procedure to list all players belonging to a team
+CREATE PROCEDURE cdp.listAllTeamPlayers (@TeamID INT)
+AS
+	SELECT Nome, Posicao FROM cdp.jogador where Equipa_Atual = @TeamID;
+GO
+
+-- Stored Procedure to change players teams
+CREATE PROCEDURE cdp.changePlayersTeam (@PlayerName VARCHAR(MAX), @Equipa_Atual INT, @Equipa_Nova INT)
+AS
+	UPDATE cdp.jogador SET Equipa_Atual = @Equipa_Nova WHERE Nome = @PlayerName AND Equipa_Atual = @Equipa_Atual;
+GO
 
 -- Stored procedure to return all teams
 
