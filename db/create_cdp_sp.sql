@@ -236,14 +236,21 @@ AS
 GO
 
 -- Stored Procedure to give team Win, Losses, Draws
-CREATE PROCEDURE cdp.listTeamWinLossDraw @TeamID INT
+CREATE PROCEDURE cdp.listTeamWinLossDraw (@TeamID INT, @CompID INT = NULL)
 AS
 	DECLARE @WLD TABLE(
 	Wins		INT,
 	Losses		INT,
 	Draws		INT);
 
-	INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID), cdp.teamLosses(@TeamID), cdp.teamDraws(@TeamID))
+	if utils.IsNullOrEmpty(@CompID) = 1
+	BEGIN
+	INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID, NULL), cdp.teamLosses(@TeamID, NULL), cdp.teamDraws(@TeamID, NULL))
+	END
+	ELSE
+	BEGIN
+		INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID, @CompID), cdp.teamLosses(@TeamID, @CompID), cdp.teamDraws(@TeamID, @CompID))
+	END
 	SELECT Wins, Losses, Draws from @WLD;
 GO
 
