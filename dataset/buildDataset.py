@@ -261,17 +261,17 @@ def add_jogadores():
         cursorAux.commit()
     disconnect(conn)
     disconnect(newConn)
-        
-    
+
+
 
 #add_Casas_de_Apostas(10)
 #add_apostadores(20)
 #add_desportos()
-#add_clubes_futebol('data/closing_odds.csv', 1, 8000)
-#add_competicao_futebol('data/closing_odds.csv', 1, 8000)
-#add_jogos('data/closing_odds.csv', 8000)
+#add_clubes_futebol(os.path.abspath("dataset/data/closing_odds.csv"), 1, 8000)
+#add_competicao_futebol(os.path.abspath("dataset/data/closing_odds.csv"), 1, 8000)
+#add_jogos(os.path.abspath("dataset/data/closing_odds.csv"), 8000)
 #add_apostas()
 #associate_apostas_with_casas()
 #associate_apostas_with_apostador(3)
-#add_jogos_score(8000, 'data/closing_odds.csv')
-add_jogadores()
+#add_jogos_score(8000, os.path.abspath("dataset/data/closing_odds.csv"))
+#add_jogadores()
