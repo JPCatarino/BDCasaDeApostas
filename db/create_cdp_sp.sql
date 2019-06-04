@@ -234,3 +234,44 @@ AS
 		(SELECT ID_Jogo, Nome_casa, Nome_fora FROM (SELECT ID_Jogo AS ID_M, Nome as Nome_casa FROM @auxJogos INNER JOIN cdp.equipa ON ID_casa = ID) AS tab_casa INNER JOIN (SELECT ID_Jogo, Nome as Nome_fora FROM @auxJogos INNER JOIN cdp.equipa ON ID_fora = ID) AS tab_fora ON tab_casa.ID_M = tab_fora.ID_Jogo) AS tab_jogos 
 		ON [@auxJogos].ID_Jogo = tab_jogos.ID_Jogo;
 GO
+
+-- Stored Procedure to give team Win, Losses, Draws
+CREATE PROCEDURE cdp.listTeamWinLossDraw @TeamID INT
+AS
+	DECLARE @WLD TABLE(
+	Wins		INT,
+	Losses		INT,
+	Draws		INT);
+
+	INSERT INTO @WLD (Wins, Losses, Draws) VALUES (cdp.teamVictories(@TeamID), cdp.teamLosses(@TeamID), cdp.teamDraws(@TeamID))
+	SELECT Wins, Losses, Draws from @WLD;
+GO
+
+-- Stored Procedure to list all players belonging to a team
+
+-- Stored procedure to return all teams
+
+CREATE PROCEDURE cdp.listAllTeams
+AS
+	SELECT ID, Nome from cdp.equipa;
+GO
+
+-- Stored procedure to return all teams playing on a given competition
+
+CREATE PROCEDURE cdp.listAllTeamsOnACompetition @CompID INT
+AS
+	if utils.IsNullOrEmpty(@CompID) = 1
+	BEGIN
+		RAISERROR('Missing competition ID' , 16, 1)
+		return 0
+	END 
+
+	SELECT * from cdp.competicao where ID = @CompID 
+
+	if @@ROWCOUNT = 0
+	BEGIN
+		RAISERROR('Competition doesnt exist', 16, 1)
+		return 0;
+	END
+
+	SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = 1 GROUP BY ID_casa, ID_fora;
