@@ -91,6 +91,69 @@ BEGIN
 END
 GO
 
+-- Function to calculate goal scored by a team, option in a competition
+CREATE FUNCTION cdp.teamScoredGoals(@TeamID INT , @IDComp INT = NULL) RETURNS INT
+AS
+BEGIN
+	DECLARE @scoredCasa INT;
+	DECLARE @scoredFora INT;
+	DECLARE @scoredTotal INT;
+
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	if utils.IsNullOrEmpty(@IDComp) = 1
+	BEGIN
+		SELECT @scoredCasa = sum(score_casa) FROM cdp.jogo WHERE (ID_casa = @TeamID);
+		SELECT @scoredFora = sum(score_fora) from cdp.jogo WHERE (ID_fora = @TeamID);
+	END
+	else
+	BEGIN
+		SELECT @scoredCasa = sum(score_casa) FROM cdp.jogo WHERE (ID_casa = @TeamID) AND ID_competicao = @IDComp;
+		SELECT @scoredFora = sum(score_fora) from cdp.jogo WHERE (ID_fora = @TeamID) AND ID_competicao = @IDComp;
+	END
+
+	SET @scoredTotal = @scoredCasa + @scoredFora;
+
+	RETURN @scoredTotal;
+
+END
+GO
+
+-- Function to calculate goal suffered by team, option in a competition 
+
+CREATE FUNCTION cdp.teamSuffGoals(@TeamID INT , @IDComp INT = NULL) RETURNS INT
+AS
+BEGIN
+	DECLARE @scoredCasa INT;
+	DECLARE @scoredFora INT;
+	DECLARE @scoredTotal INT;
+
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	if utils.IsNullOrEmpty(@IDComp) = 1
+	BEGIN
+		SELECT @scoredCasa = sum(score_fora) FROM cdp.jogo WHERE (ID_casa = @TeamID);
+		SELECT @scoredFora = sum(score_casa) from cdp.jogo WHERE (ID_fora = @TeamID);
+	END
+	else
+	BEGIN
+		SELECT @scoredCasa = sum(score_fora) FROM cdp.jogo WHERE (ID_casa = @TeamID) AND ID_competicao = @IDComp;
+		SELECT @scoredFora = sum(score_casa) from cdp.jogo WHERE (ID_fora = @TeamID) AND ID_competicao = @IDComp;
+	END
+
+	SET @scoredTotal = @scoredCasa + @scoredFora;
+
+	RETURN @scoredTotal;
+
+END
+GO	
+
 -- Function to calculate average bets on team games
 CREATE FUNCTION cdp.AverageTeamGamesBets (@TeamID INT) RETURNS MONEY
 AS
