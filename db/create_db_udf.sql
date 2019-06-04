@@ -72,6 +72,22 @@ BEGIN
 END
 GO
 
+CREATE FUNCTION cdp.AverageTeamGamesBets (@TeamID INT) RETURNS MONEY
+AS
+BEGIN
+	DECLARE @avgMoney MONEY;
+
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	SELECT @avgMoney = AVG(Quantia) from cdp.faz INNER JOIN (SELECT ID_Aposta FROM cdp.jogo LEFT JOIN cdp.relacionada_com ON ID_Jogo = ID WHERE ID_casa = @TeamID OR ID_fora = @TeamID) AS apostasEquipas on apostasEquipas.ID_Aposta = faz.ID_Aposta;
+
+	RETURN @avgMoney;
+END
+GO
+
 --CREATE FUNCTION cdp.AreAllGameBetsPaid(@Game_ID INT) RETURNS bit
 --AS 
 --BEGIN	
