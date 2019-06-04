@@ -34,6 +34,28 @@ AS
 	INSERT INTO cdp.pagamento (Referencia, Valor, ID_apostador, Email_apostador, NIF_apostador, pagamento_feito) VALUES (@Referencia, @QuantiaAposta, @IDApostador, @EmailApostador, @NIFApostador, DEFAULT);
 GO
 
+-- check if user is trying to bet in a finished game 
+CREATE TRIGGER cdp.checkIfApostaIsValid On cdp.[faz] 
+AFTER INSERT
+AS
+	DECLARE @isFinished bit;
+	DECLARE @IDAposta INT;
+	DECLARE @IDJogo INT;
+
+	SELECT @IDAposta = ID_aposta FROM inserted;
+	SELECT @IDJogo = ID_Jogo FROM cdp.relacionada_com WHERE ID_Aposta = @IDAposta;
+
+	SELECT @isFinished = finished FROM cdp.jogo WHERE ID = @IDJogo;
+
+	if @isFinished = 1
+	BEGIN
+		RAISERROR('Nao podes apostas em jogos terminados', 16,1)
+		ROLLBACK TRAN
+		RETURN
+	END
+GO
+
+
 -- DROP TRIGGER cdp.addToApostaEmAndPagamento;
 
 --CREATE TRIGGER cdp.deleteGame ON cdp.[jogo]
