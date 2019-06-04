@@ -6,6 +6,7 @@ import csv
 import os
 from faker import Faker
 import sys
+import signal
 
 def connect():
     """ Creates a connection to the database """
@@ -262,7 +263,22 @@ def add_jogadores():
     disconnect(conn)
     disconnect(newConn)
 
+def keyboardInterruptHandler(signal, frame):
+    print("KeyboardInterrupt (ID: {}) has been caught. Cleaning up...".format(signal))
+    econn = connect()
+    ecursor = econn.cursor()
+    ecursor.execute("EXEC utils.enableAllTriggers;")
+    ecursor.commit()
+    disconnect(econn)
+    exit(0)
 
+signal.signal(signal.SIGINT, keyboardInterruptHandler)    
+
+
+dtconn = connect()
+dtcursor = dtconn.cursor()
+dtcursor.execute("EXEC utils.disableAllTriggers;")
+dtcursor.commit()
 
 #add_Casas_de_Apostas(10)
 #add_apostadores(20)
@@ -275,3 +291,6 @@ def add_jogadores():
 #associate_apostas_with_apostador(3)
 #add_jogos_score(8000, os.path.abspath("dataset/data/closing_odds.csv"))
 #add_jogadores()
+dtcursor.execute("EXEC utils.enableAllTriggers;")
+dtcursor.commit()
+disconnect(dtconn)

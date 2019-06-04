@@ -302,3 +302,16 @@ AS
 
 	SELECT ID,Nome from cdp.equipa INNER JOIN (SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = @CompID GROUP BY ID_casa, ID_fora) AS jogos ON ID = jogos.ID_casa OR ID = jogos.id_fora GROUP BY ID, Nome;
 GO
+
+-- aux stored procedure to disable all triggers
+CREATE PROCEDURE utils.disableAllTriggers
+AS
+	EXEC sp_MSforeachtable @command1="ALTER TABLE ? DISABLE TRIGGER ALL"
+GO
+
+-- aux stored procedure to enable all triggers
+
+CREATE PROCEDURE utils.enableAllTriggers
+AS
+	EXEC sp_MSforeachtable @command1="ALTER TABLE ? ENABLE TRIGGER ALL"
+GO
