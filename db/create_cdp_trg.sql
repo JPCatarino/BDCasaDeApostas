@@ -114,4 +114,38 @@ GO
 
 -- DROP TRIGGER cdp.OnlyAllowTTPlayersPerTeam;
 
+-- Trigger to check if competicao isnt set in the past
+CREATE TRIGGER cdp.cantAddPastCompetitions ON cdp.[competicao]
+AFTER INSERT, UPDATE
+AS
+	DECLARE @dateToday DATETIME = GETDATE()
+	DECLARE @dateInicio DATETIME;
+
+	SELECT @dateInicio = Data_Inicio FROM inserted;
+
+	if @dateInicio < @dateToday
+	BEGIN
+		RAISERROR('A data da competição já ocorreu', 16, 1)
+		ROLLBACK TRAN;
+	END
+GO
+
+--Trigger to check if data inicio < data_fim
+CREATE TRIGGER cdp.checkIfDateIntervalIsValid on cdp.[competicao]
+AFTER INSERT, UPDATE
+AS
+	DECLARE @dataInicio DATETIME;
+	DECLARE @dataFim DATETIME;
+
+
+	SELECT @dataInicio = Data_Inicio from inserted;
+	SELECT @dataFim = Data_Fim from inserted;
+
+	if @dataInicio > @dataFim
+	BEGIN
+		RAISERROR('A data final da competicao tem de ser posterior a data inicial', 16, 1);
+		ROLLBACK TRAN;
+	END
+GO
+
 
