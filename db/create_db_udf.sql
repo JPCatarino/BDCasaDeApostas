@@ -22,7 +22,7 @@ END
 GO
 
 -- Function to calculate team victories
-CREATE FUNCTION cdp.teamVictories(@TeamID INT) RETURNS INT
+CREATE FUNCTION cdp.teamVictories(@TeamID INT, @IDComp INT = NULL) RETURNS INT
 AS
 BEGIN
 	DECLARE @nmVictories INT;
@@ -32,14 +32,20 @@ BEGIN
 		RETURN cast('insert a valid id' as int);
 	END
 
-	SELECT @nmVictories = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa > score_fora) OR (ID_fora = @TeamID AND score_fora > score_casa);
-
+	if utils.IsNullOrEmpty(@IDComp) = 1
+	BEGIN
+		SELECT @nmVictories = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa > score_fora) OR (ID_fora = @TeamID AND score_fora > score_casa);
+	END
+	else
+	BEGIN
+		SELECT @nmVictories = COUNT(ID) FROM cdp.jogo WHERE ((ID_casa = @TeamID AND score_casa > score_fora) OR (ID_fora = @TeamID AND score_fora > score_casa)) AND ID_competicao = @IDComp;
+	END
 	RETURN @nmVictories;
 END
 GO
 
 -- Function to calculate team losses
-CREATE FUNCTION cdp.teamLosses(@TeamID INT) RETURNS INT
+CREATE FUNCTION cdp.teamLosses(@TeamID INT, @IDComp INT = NULL) RETURNS INT
 AS
 BEGIN
 	DECLARE @nmLosses INT;
@@ -49,14 +55,20 @@ BEGIN
 		RETURN cast('insert a valid id' as int);
 	END
 
-	SELECT @nmLosses = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa < score_fora) OR (ID_fora = @TeamID AND score_fora < score_casa);
-
+	if utils.IsNullOrEmpty(@IDComp) = 1
+	BEGIN
+		SELECT @nmLosses = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa < score_fora) OR (ID_fora = @TeamID AND score_fora < score_casa);
+	END
+	else
+	BEGIN
+		SELECT @nmLosses = COUNT(ID) FROM cdp.jogo WHERE ((ID_casa = @TeamID AND score_casa < score_fora) OR (ID_fora = @TeamID AND score_fora < score_casa)) AND ID_competicao = @IDComp;
+	END
 	RETURN @nmLosses;
 END
 GO
 
 -- Function to calculate team draws
-CREATE FUNCTION cdp.teamDraws(@TeamID INT) RETURNS INT
+CREATE FUNCTION cdp.teamDraws(@TeamID INT, @IDComp INT = NULL) RETURNS INT
 AS
 BEGIN
 	DECLARE @nmDraws INT;
@@ -66,12 +78,20 @@ BEGIN
 		RETURN cast('insert a valid id' as int);
 	END
 
-	SELECT @nmDraws = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa = score_fora) OR (ID_fora = @TeamID AND score_fora = score_casa);
+	if utils.IsNullOrEmpty(@IDComp) = 1
+	BEGIN
+		SELECT @nmDraws = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa = score_fora) OR (ID_fora = @TeamID AND score_fora = score_casa);
+	END
+	else
+	BEGIN
+		SELECT @nmDraws = COUNT(ID) FROM cdp.jogo WHERE ((ID_casa = @TeamID AND score_casa = score_fora) OR (ID_fora = @TeamID AND score_fora = score_casa)) AND ID_competicao = @IDComp;
+	END
 
 	RETURN @nmDraws;
 END
 GO
 
+-- Function to calculate average bets on team games
 CREATE FUNCTION cdp.AverageTeamGamesBets (@TeamID INT) RETURNS MONEY
 AS
 BEGIN
