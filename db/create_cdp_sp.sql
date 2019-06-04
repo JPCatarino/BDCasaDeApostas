@@ -274,5 +274,5 @@ AS
 		return 0;
 	END
 
-	SELECT Nome from cdp.equipa INNER JOIN (SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = @CompID GROUP BY ID_casa, ID_fora) AS jogos ON ID = jogos.ID_casa OR ID = jogos.id_fora GROUP BY Nome;
+	SELECT ID,Nome from cdp.equipa INNER JOIN (SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = @CompID GROUP BY ID_casa, ID_fora) AS jogos ON ID = jogos.ID_casa OR ID = jogos.id_fora GROUP BY ID, Nome;
 GO
