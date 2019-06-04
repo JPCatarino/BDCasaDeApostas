@@ -58,6 +58,23 @@ GO
 
 -- DROP TRIGGER cdp.addToApostaEmAndPagamento;
 
+-- Trigger to avoid having a team playing against itself
+CREATE TRIGGER cdp.CantPlaySameTeam on cdp.[jogo] 
+AFTER INSERT 
+AS
+	DECLARE @teamIDCasa INT;
+	DECLARE @teamIDFora INT;
+
+	SELECT @teamIDCasa = id_casa FROM inserted;
+	SELECT @teamIDFora = id_fora FROM inserted;
+
+	if @teamIDCasa = @teamIDFora 
+	BEGIN
+		RAISERROR('The team cant play against itself.', 16 , 1)
+		ROLLBACK TRAN;
+	END
+GO
+
 --CREATE TRIGGER cdp.deleteGame ON cdp.[jogo]
 --AFTER DELETE
 --AS
