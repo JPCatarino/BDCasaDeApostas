@@ -4,6 +4,7 @@ GO
 CREATE SCHEMA utils;
 go
 
+-- Function to check if a given game occurs during the time set by the competiton it belongs to
 CREATE FUNCTION cdp.IsGameSetDuringCompetition(@GameDate DATETIME, @Comp_ID INT) RETURNS bit 
 AS
 BEGIN
@@ -20,14 +21,63 @@ BEGIN
 END
 GO
 
-CREATE FUNCTION 
+-- Function to calculate team victories
+CREATE FUNCTION cdp.teamVictories(@TeamID INT) RETURNS INT
+AS
+BEGIN
+	DECLARE @nmVictories INT;
 
-CREATE FUNCTION cdp.AreAllGameBetsPaid(@Game_ID INT) RETURNS bit
-AS 
-BEGIN	
-	
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	SELECT @nmVictories = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa > score_fora) OR (ID_fora = @TeamID AND score_fora > score_casa);
+
+	RETURN @nmVictories;
 END
 GO
+
+-- Function to calculate team losses
+CREATE FUNCTION cdp.teamLosses(@TeamID INT) RETURNS INT
+AS
+BEGIN
+	DECLARE @nmLosses INT;
+
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	SELECT @nmLosses = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa < score_fora) OR (ID_fora = @TeamID AND score_fora < score_casa);
+
+	RETURN @nmLosses;
+END
+GO
+
+-- Function to calculate team draws
+CREATE FUNCTION cdp.teamDraws(@TeamID INT) RETURNS INT
+AS
+BEGIN
+	DECLARE @nmDraws INT;
+
+	if utils.IsNullOrEmpty(@TeamID) = 1
+	BEGIN	
+		RETURN cast('insert a valid id' as int);
+	END
+
+	SELECT @nmDraws = COUNT(ID) FROM cdp.jogo WHERE (ID_casa = @TeamID AND score_casa = score_fora) OR (ID_fora = @TeamID AND score_fora = score_casa);
+
+	RETURN @nmDraws;
+END
+GO
+
+--CREATE FUNCTION cdp.AreAllGameBetsPaid(@Game_ID INT) RETURNS bit
+--AS 
+--BEGIN	
+	
+--END
+--GO
 
 
 -- Aux Function to check if a given parameter is not null
@@ -41,9 +91,11 @@ BEGIN
 END
 GO
 
+-- Create a view that returns a new id so the function can be used inside UDF
 create view getNewID as select newid() as new_id;
 GO
 
+-- Function to generate a referencia for payment
 CREATE FUNCTION utils.generateReferencia() RETURNS VARCHAR(50) AS
 BEGIN
 	DECLARE @randomRef VARCHAR(MAX);
