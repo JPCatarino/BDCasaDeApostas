@@ -315,16 +315,25 @@ AS
 		return 0
 	END 
 
-	SELECT * from cdp.competicao where ID = @CompID 
+--	SELECT * from cdp.competicao where ID = @CompID					-- Returns record set
+
+--	if @@ROWCOUNT = 0
+--	BEGIN
+--		RAISERROR('Competition doesnt exist', 16, 1)
+--		return 0;
+--	END
+
+	SELECT ID,Nome from cdp.equipa INNER JOIN (SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = @CompID GROUP BY ID_casa, ID_fora) AS jogos ON ID = jogos.ID_casa OR ID = jogos.id_fora GROUP BY ID, Nome;
 
 	if @@ROWCOUNT = 0
 	BEGIN
 		RAISERROR('Competition doesnt exist', 16, 1)
 		return 0;
 	END
-
-	SELECT ID,Nome from cdp.equipa INNER JOIN (SELECT ID_casa, ID_fora from cdp.jogo where ID_competicao = @CompID GROUP BY ID_casa, ID_fora) AS jogos ON ID = jogos.ID_casa OR ID = jogos.id_fora GROUP BY ID, Nome;
 GO
+
+-- DROP PROCEDURE cdp.listAllTeamsOnACompetition;
+
 
 -- Stored Proc that returns every available competition
 CREATE PROCEDURE cdp.listAllCompetitions
@@ -396,6 +405,51 @@ AS
 GO
 
 -- DROP PROCEDURE cdp.deleteAllBetsOfAGameInABooker;
+-- SP to list most betted games on a given booker
+CREATE PROCEDURE cdp.listMostBettedGames @BookerName VARCHAR(MAX)
+AS
+	SET NOCOUNT ON;
+	CREATE TABLE #auxJogos(
+		ID_Jogo INT,
+		Nome_casa VARCHAR(MAX),
+		Nome_fora VARCHAR(MAX),
+		Data	DATETIME);
+
+	DECLARE @auxApostas TABLE(
+		ID		INT,
+		Descricao VARCHAR(MAX), 
+		Odds DECIMAL(4,2), 
+		DataHora DATETIME);
+
+	DECLARE @jogoAtual INT;
+
+	INSERT INTO #auxJogos EXEC cdp.ListAvailableGamesPerBooker @BookerName;
+
+	ALTER TABLE [#auxJogos] ADD nmAp INT;
+
+	DECLARE Jogos_Cursor CURSOR FOR 
+    SELECT ID_Jogo FROM #auxJogos
+
+	OPEN Jogos_Cursor;
+
+	FETCH NEXT FROM Jogos_Cursor INTO
+    @jogoAtual;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @nmAptAux INT;
+		INSERT INTO @auxApostas EXEC cdp.ListAvailableBetsForGameAux @jogoAtual;
+		SELECT @nmAptAux = COUNT(ID_aposta) FROM cdp.faz INNER JOIN @auxApostas ON ID_aposta = ID;
+		UPDATE #auxJogos SET nmAp = @nmAptAux WHERE ID_Jogo = @jogoAtual;
+		FETCH NEXT FROM Jogos_Cursor INTO
+		@jogoAtual;
+		DELETE FROM @auxApostas;
+	END
+
+	SELECT Nome_casa, Nome_fora, Data, nmAp from #auxJogos;
+GO
+
+-- DROP PROCEDURE cdp.listMostBettedGames;
 
 -- aux stored procedure to disable all triggers
 CREATE PROCEDURE utils.disableAllTriggers
