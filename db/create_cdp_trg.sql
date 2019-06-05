@@ -147,5 +147,38 @@ AS
 		ROLLBACK TRAN;
 	END
 GO
+	
+-- Trigger to check if a game can be deleted
+--CREATE TRIGGER cdp.deleteAGameFromDB on cdp.[jogo]
+--INSTEAD OF DELETE
+--AS
+--	DECLARE @IsGameFinished bit;
+--	DECLARE @GameDate DATETIME;
+--	DECLARE @today DATETIME = GETDATE();
+--	DECLARE @deletedGame INT;
 
+--	SELECT @IsGameFinished = finished, @GameDate = Data from deleted;
 
+--	if finished = 0 OR @today < @GameDate
+--	BEGIN
+--		RAISERROR('Game hasnt finished yet', 16, 1);
+--		return 0;
+--	END
+	
+--	SELECT @deletedGame = ID from deleted;
+--	DELETE FROM cdp.relacionada_com WHERE ID_Jogo = @deletedGame;
+--GO
+
+CREATE TRIGGER cdp.deleteAposta on cdp.[aposta_normal]
+INSTEAD OF DELETE
+AS
+	DECLARE @idAposta INT;
+	DECLARE @idJogo INT;
+	DECLARE @dataJogo DATETIME;
+
+	SELECT @idAposta = ID from deleted;
+
+	DELETE FROM cdp.relacionada_com WHERE ID_aposta = @idAposta;
+	DELETE FROM cdp.faz WHERE ID_aposta = @idAposta;
+	DELETE FROM cdp.disponibiliza WHERE ID_APOSTA = @idAposta;
+GO
