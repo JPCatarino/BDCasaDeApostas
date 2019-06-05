@@ -25,7 +25,7 @@ namespace BDCasasApostasGUI
 
         }
 
-        Boolean cb1click = false;
+        
        
 
 
@@ -201,76 +201,7 @@ namespace BDCasasApostasGUI
 
         public void addcombobox2()
         {
-            if (cb1click == false)
-            {
-                cn1.Open();
-                // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
-
-                SqlCommand cm = new SqlCommand("cdp.listAllTeams", cn1);
-                cm.CommandType = CommandType.StoredProcedure;
-
-                try
-                {
-                    SqlDataReader dr = cm.ExecuteReader();
-
-                    while (dr.Read())
-                    {
-                        comboBox1.Items.Add(dr["Nome"]);
-
-                    }
-                    dr.Close();
-                    dr.Dispose();
-
-
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                //dispor as equipas daquela competição
-
-                //cn1.Open();
-                // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
-
-                SqlCommand cm = new SqlCommand("cdp.listAllTeamsOnACompetition", cn1);
-                cm.CommandType = CommandType.StoredProcedure;
-
-                SqlCommand cm2 = new SqlCommand("cdp.GetCompetitionID", cn1);
-                cm2.CommandType = CommandType.StoredProcedure;
-                cm2.Parameters.Add("@Name_Comp", SqlDbType.VarChar).Value = comboBox1.SelectedItem.ToString();
-                cm2.Parameters.Add("@compID", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.ReturnValue;
-                int retval = (int)cm2.Parameters["@compID"].Value;
-
-
-
-                cm.Parameters.Add("@CompID", SqlDbType.VarChar).Value = retval;
-
-
-                try
-                {
-                    SqlDataReader dr = cm.ExecuteReader();
-
-                    while (dr.Read())
-                    {
-                        comboBox1.Items.Add(dr["Nome"]);
-
-                    }
-                    dr.Close();
-                    dr.Dispose();
-
-
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-            }
+            
 
 
         }
@@ -302,8 +233,9 @@ namespace BDCasasApostasGUI
             SqlCommand cm2 = new SqlCommand("cdp.GetCompetitionID", cn1);
             cm2.CommandType = CommandType.StoredProcedure;
             cm2.Parameters.Add("@Name_Comp", SqlDbType.VarChar).Value = comboBox1.SelectedItem.ToString();
-            cm2.Parameters.Add("@compID", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.ReturnValue;
-            int retval = (int)cm2.Parameters["@compID"].Value;
+            cm2.Parameters.Add("@ID_Comp", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
+            cm2.ExecuteNonQuery();
+            int retval = (int)cm2.Parameters["@ID_Comp"].Value;
 
 
 
@@ -313,6 +245,7 @@ namespace BDCasasApostasGUI
             try
             {
                 SqlDataReader dr = cm.ExecuteReader();
+               // SqlDataReader dr2 = cm2.ExecuteReader();
 
                 while (dr.Read())
                 {
@@ -331,6 +264,80 @@ namespace BDCasasApostasGUI
             }
 
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            cn1.Open();
+            // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
+
+            SqlCommand cm = new SqlCommand("cdp.listAllTeamPlayers", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
+
+            cm.Parameters.Add("@TeamID", SqlDbType.VarChar).Value = textBox2.Text;
+
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    ListaCasaX.Items.Add(dr["Nome"]);
+                    ListaCasaX.Items.Add(dr["Posicao"]);
+                    ListaCasaX.Items.Add(" ");
+
+                }
+                dr.Close();
+                dr.Dispose();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            chart2.Titles.Clear();
+            chart2.Series["GM"].Points.Clear();
+            chart2.Series["GS"].Points.Clear();
+            cn1.Open();
+
+            SqlCommand cm = new SqlCommand("cdp.listScoredAndSuffGoals", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
+
+            cm.Parameters.Add("@TeamID", SqlDbType.VarChar).Value = textBox1.Text;
+
+
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+
+                while (dr.Read())
+                {
+
+
+                    chart2.Titles.Add("GM-GS");
+                    chart2.Series["GM"].Points.AddXY(dr[0].ToString(), dr[0].ToString());
+                    chart2.Series["GS"].Points.AddXY(dr[1].ToString(), dr[1].ToString());
+                    
+
+                }
+                dr.Close();
+                dr.Dispose();
+                cn1.Close();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
