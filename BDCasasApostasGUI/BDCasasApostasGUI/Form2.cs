@@ -226,7 +226,30 @@ namespace BDCasasApostasGUI
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
+            cn1.Open();
+            SqlCommand cm = new SqlCommand("cdp.ListBookerNames", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
 
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    comboBox1.Items.Add(dr["Nome"]);
+
+                }
+                dr.Close();
+                dr.Dispose();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button10_Click(object sender, EventArgs e)

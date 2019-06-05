@@ -103,6 +103,12 @@
     <Compile Include="selecionacomp.Designer.cs">
       <DependentUpon>selecionacomp.cs</DependentUpon>
     </Compile>
+    <Compile Include="TrocaEquipas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrocaEquipas.Designer.cs">
+      <DependentUpon>TrocaEquipas.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="selecionacomp.resx">
       <DependentUpon>selecionacomp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrocaEquipas.resx">
+      <DependentUpon>TrocaEquipas.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

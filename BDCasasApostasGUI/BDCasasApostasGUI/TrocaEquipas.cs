@@ -10,16 +10,11 @@ using System.Windows.Forms;
 
 namespace BDCasasApostasGUI
 {
-    public partial class listaJogosApostadorX : Form
+    public partial class TrocaEquipas : Form
     {
-        public listaJogosApostadorX()
+        public TrocaEquipas()
         {
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
