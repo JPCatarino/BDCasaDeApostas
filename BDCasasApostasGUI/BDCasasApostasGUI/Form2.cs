@@ -234,5 +234,15 @@ namespace BDCasasApostasGUI
             var listajogosporComp = new selecionacomp();
             listajogosporComp.Show();
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
