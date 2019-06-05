@@ -451,6 +451,14 @@ GO
 
 -- DROP PROCEDURE cdp.listMostBettedGames;
 
+-- sp to add a new competition
+CREATE PROCEDURE cdp.addNewCompetition  @NameComp VARCHAR(MAX), @CountryComp VARCHAR(MAX), @DateInit DATETIME, @DateEnd DATETIME
+AS
+	INSERT cdp.competicao (Nome, Pais, Data_Inicio, Data_Fim, ID_Desporto) SELECT @NameComp, @CountryComp, @DateInit, @DateEnd, 1
+GO
+
+-- DROP PROCEDURE cdp.addNewCompetition;
+
 -- aux stored procedure to disable all triggers
 CREATE PROCEDURE utils.disableAllTriggers
 AS
