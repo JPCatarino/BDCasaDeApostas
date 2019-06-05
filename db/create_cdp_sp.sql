@@ -446,7 +446,7 @@ AS
 		DELETE FROM @auxApostas;
 	END
 
-	SELECT Nome_casa, Nome_fora, Data, nmAp from #auxJogos;
+	SELECT Nome_casa, Nome_fora, Data, nmAp from #auxJogos ORDER BY nmAP DESC;
 GO
 
 -- DROP PROCEDURE cdp.listMostBettedGames;
