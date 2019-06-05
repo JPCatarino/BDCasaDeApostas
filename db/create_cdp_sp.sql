@@ -457,6 +457,14 @@ AS
 	INSERT cdp.competicao (Nome, Pais, Data_Inicio, Data_Fim, ID_Desporto) SELECT @NameComp, @CountryComp, @DateInit, @DateEnd, 1
 GO
 
+-- add sp to add a new bet
+CREATE PROCEDURE cdp.addNewAposta @NameBooker VARCHAR(MAX), @IDJogo INT, @Descricao VARCHAR(MAX), @odd DECIMAL(4,2), @Data DATETIME
+AS
+	DECLARE @idaposta INT;
+	EXEC cdp.AddApostaNormalSansGame @Descricao, @odd, @Data, @idaposta OUTPUT;
+	EXEC cdp.AssociateBetWithGameAndBooker @NameBooker, @IDJogo, @idaposta;
+GO 
+
 -- DROP PROCEDURE cdp.addNewCompetition;
 
 -- aux stored procedure to disable all triggers

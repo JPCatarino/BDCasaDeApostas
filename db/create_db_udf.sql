@@ -208,3 +208,18 @@ END
 GO
 
 -- DROP FUNCTION utils.generateReferencia;
+
+--CREATE FUNCTION cdp.checkIfGivenCompetitionExists (@COMP_ID INT) RETURNS BIT
+--AS
+--BEGIN
+--	SELECT * from cdp.competicao where ID = @COMP_ID;
+
+--	if @@ROWCOUNT = 0
+--	BEGIN
+--		return 0;
+--	END
+
+--	return 1;
+
+--END
+--GO
