@@ -246,6 +246,7 @@ AS
 	DELETE FROM cdp.competicao WHERE Nome = @compID;
 GO
 
+-- drop trigger cdp.deleteAposta
 CREATE TRIGGER cdp.deleteAposta on cdp.[aposta_normal]
 INSTEAD OF DELETE
 AS
