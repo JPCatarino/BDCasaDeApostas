@@ -60,6 +60,19 @@ AS
 	(SELECT * FROM cdp.relacionada_com  WHERE relacionada_com.ID_Jogo = @ID_Game) AS apostas ON ID = apostas.ID_Aposta 
 GO 
 
+-- Stored Proc to list bets available for a given game -- aux for internal use
+CREATE PROCEDURE cdp.ListAvailableBetsForGameAux @ID_Game INT
+AS
+	IF @ID_Game is NULL
+	BEGIN
+		PRINT 'Insert the ID of the Game'
+		RETURN 0
+	END
+
+	 SELECT ID, Descricao, Odds, DataHora FROM cdp.aposta_normal INNER JOIN 
+	(SELECT * FROM cdp.relacionada_com  WHERE relacionada_com.ID_Jogo = @ID_Game) AS apostas ON ID = apostas.ID_Aposta 
+GO
+
 -- Stored Proc to check available competitions on a given booker
 CREATE PROCEDURE cdp.ListAvailableCompetitionsOnBooker @Name_Booker VARCHAR(255)
 AS
@@ -318,6 +331,54 @@ CREATE PROCEDURE cdp.listAllCompetitions
 AS
 	SELECT ID, Nome from cdp.competicao;
 GO
+
+CREATE PROCEDURE cdp.deleteAllBetsOfAGameInABooker @GameID INT, @BookerName VARCHAR(MAX)
+AS
+	DECLARE @jogoAtual INT;
+
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_casa VARCHAR(MAX),
+		ID_fora VARCHAR(MAX),
+		Data	DATETIME);
+
+	DECLARE @auxApostas TABLE(
+	ID		INT,
+	Descricao VARCHAR(MAX), 
+	Odds DECIMAL(4,2), 
+	DataHora DATETIME);
+
+	INSERT INTO @auxJogos EXEC cdp.ListAvailableGamesPerBooker @BookerName;
+
+	DECLARE Jogos_Cursor CURSOR FOR 
+    SELECT ID_Jogo FROM @auxJogos
+
+	OPEN Jogos_Cursor;
+
+	FETCH NEXT FROM Jogos_Cursor INTO
+    @jogoAtual;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		if @jogoAtual = @GameID
+		BEGIN
+			INSERT INTO @auxApostas EXEC cdp.ListAvailableBetsForGameAux @jogoAtual;
+
+			DELETE FROM cdp.aposta_normal SELECT * FROM (cdp.aposta_normal AS apostasToDelete INNER JOIN @auxApostas AS apostasCasa ON apostasToDelete.ID = apostasCasa.ID) INNER JOIN cdp.disponibiliza ON apostasCasa.ID = ID_APOSTA WHERE Nome_CAP = @BookerName;
+		END
+		
+		FETCH NEXT FROM Jogos_Cursor INTO
+		@jogoAtual;
+	END
+	CLOSE Jogos_Cursor
+	DEALLOCATE Jogos_Cursor
+GO
+
+-- DROP PROCEDURE cdp.deleteAllBetsOfAGameInABooker;
+
+EXEC cdp.deleteAllBetsOfAGameInABooker 1, 'Leon-Hampton';
+SELECT * from cdp.casa_de_apostas;
+SELECT * from cdp.aposta_normal;
 
 -- aux stored procedure to disable all triggers
 CREATE PROCEDURE utils.disableAllTriggers
