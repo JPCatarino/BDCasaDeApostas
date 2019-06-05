@@ -169,6 +169,83 @@ GO
 --	DELETE FROM cdp.relacionada_com WHERE ID_Jogo = @deletedGame;
 --GO
 
+-- drop trigger cdp.deleteAGame;
+
+CREATE TRIGGER cdp.deleteAGame on cdp.[jogo]
+INSTEAD OF DELETE
+AS
+	DECLARE @jogotd INT;
+	DECLARE @auxApostas TABLE(
+		ID		INT,
+		Descricao VARCHAR(MAX), 
+		Odds DECIMAL(4,2), 
+		DataHora DATETIME);
+
+	DECLARE @apostaAtual INT;
+
+	SELECT @jogotd = ID from deleted;
+
+	INSERT INTO @auxApostas EXEC cdp.ListAvailableBetsForGameAux @jogotd;
+
+	DECLARE apostas_Cursor CURSOR FOR 
+    SELECT ID FROM @auxApostas
+
+	OPEN apostas_Cursor;
+
+	FETCH NEXT FROM apostas_Cursor INTO
+    @apostaAtual;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DELETE FROM cdp.aposta_normal WHERE ID = @apostaAtual;
+		FETCH NEXT FROM apostas_Cursor INTO
+		@apostaAtual;
+	END
+	CLOSE apostas_Cursor;
+	DEALLOCATE apostas_Cursor;
+
+	DELETE FROM cdp.jogo WHERE ID = @jogotd;
+GO
+
+
+-- drop trigger cdp.deleteACompetition;
+CREATE TRIGGER cdp.deleteACompetition on cdp.[competicao] 
+INSTEAD OF DELETE
+AS
+	DECLARE @jogoAtual INT;
+
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_casa VARCHAR(MAX),
+		ID_fora VARCHAR(MAX),
+		Data	DATETIME);
+
+	DECLARE @compID VARCHAR(MAX);
+
+	SELECT @compID = Nome from deleted;
+
+	INSERT INTO @auxJogos EXEC cdp.ListGamesPerCompetition NULL, @compID;
+
+	DECLARE Jogos_Cursor CURSOR FOR 
+    SELECT ID_Jogo FROM @auxJogos
+
+	OPEN Jogos_Cursor;
+
+	FETCH NEXT FROM Jogos_Cursor INTO
+    @jogoAtual;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DELETE FROM cdp.jogo WHERE ID = @jogoAtual;
+		FETCH NEXT FROM Jogos_Cursor INTO
+		@jogoAtual;
+	END
+	CLOSE Jogos_Cursor
+	DEALLOCATE Jogos_Cursor
+
+	DELETE FROM cdp.competicao WHERE Nome = @compID;
+GO
+
 CREATE TRIGGER cdp.deleteAposta on cdp.[aposta_normal]
 INSTEAD OF DELETE
 AS
@@ -181,4 +258,5 @@ AS
 	DELETE FROM cdp.relacionada_com WHERE ID_aposta = @idAposta;
 	DELETE FROM cdp.faz WHERE ID_aposta = @idAposta;
 	DELETE FROM cdp.disponibiliza WHERE ID_APOSTA = @idAposta;
+	DELETE FROM cdp.aposta_normal WHERE ID = @idAposta;
 GO
