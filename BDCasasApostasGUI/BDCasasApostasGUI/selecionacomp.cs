@@ -20,9 +20,11 @@ namespace BDCasasApostasGUI
 
         SqlConnection cn1 = new SqlConnection("Data Source = " + "tcp:mednat.ieeta.pt\\SQLSERVER,8101" + " ;" + "Initial Catalog = " + "p3g6" +
       "; uid = " + "p3g6" + ";" + "password = " + "Javardices123");
+        DataTable dt = new DataTable();
 
         private void button10_Click(object sender, EventArgs e)
         {
+            dt.Clear();
             cn1.Open();
             SqlCommand cm = new SqlCommand("cdp.ListGamesPerCompetition", cn1);
             cm.CommandType = CommandType.StoredProcedure;
@@ -38,15 +40,16 @@ namespace BDCasasApostasGUI
                 while (dr.Read())
                 {
 
-                    ListaCasaX.Items.Add(dr["ID_Jogo"]);
-                    ListaCasaX.Items.Add(dr["Nome_Casa"]);
-                    ListaCasaX.Items.Add("VS");
-                    ListaCasaX.Items.Add(dr["Nome_Fora"]);
-                    ListaCasaX.Items.Add(" ");
-
+                    
                 }
                 dr.Close();
                 dr.Dispose();
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cm);
+                adapter.Fill(dt);
+                dataGridView1.DataSource = dt;
+                dataGridView1.DataMember = dt.TableName;
+
                 cn1.Close();
 
             }

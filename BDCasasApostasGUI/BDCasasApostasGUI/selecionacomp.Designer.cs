@@ -31,9 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(selecionacomp));
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.ListaCasaX = new System.Windows.Forms.ListBox();
             this.button10 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -53,15 +54,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(142, 22);
             this.textBox1.TabIndex = 2;
-            // 
-            // ListaCasaX
-            // 
-            this.ListaCasaX.FormattingEnabled = true;
-            this.ListaCasaX.ItemHeight = 16;
-            this.ListaCasaX.Location = new System.Drawing.Point(486, 43);
-            this.ListaCasaX.Name = "ListaCasaX";
-            this.ListaCasaX.Size = new System.Drawing.Size(268, 356);
-            this.ListaCasaX.TabIndex = 4;
             // 
             // button10
             // 
@@ -86,18 +78,28 @@
             this.label10.Text = "Listar";
             this.label10.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(501, 50);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(589, 353);
+            this.dataGridView1.TabIndex = 26;
+            // 
             // selecionacomp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 415);
+            this.ClientSize = new System.Drawing.Size(1131, 415);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.ListaCasaX);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Name = "selecionacomp";
             this.Text = "selecionacomp";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -107,8 +109,8 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ListBox ListaCasaX;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
