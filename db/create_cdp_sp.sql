@@ -348,6 +348,9 @@ AS
 	Odds DECIMAL(4,2), 
 	DataHora DATETIME);
 
+	DECLARE @apostasParaApagar TABLE(
+	ID INT);
+
 	INSERT INTO @auxJogos EXEC cdp.ListAvailableGamesPerBooker @BookerName;
 
 	DECLARE Jogos_Cursor CURSOR FOR 
@@ -363,8 +366,7 @@ AS
 		if @jogoAtual = @GameID
 		BEGIN
 			INSERT INTO @auxApostas EXEC cdp.ListAvailableBetsForGameAux @jogoAtual;
-
-			DELETE FROM cdp.aposta_normal SELECT * FROM (cdp.aposta_normal AS apostasToDelete INNER JOIN @auxApostas AS apostasCasa ON apostasToDelete.ID = apostasCasa.ID) INNER JOIN cdp.disponibiliza ON apostasCasa.ID = ID_APOSTA WHERE Nome_CAP = @BookerName;
+			INSERT INTO @apostasParaApagar SELECT ID_APOSTA FROM (cdp.aposta_normal AS apostasToDelete INNER JOIN @auxApostas AS apostasCasa ON apostasToDelete.ID = apostasCasa.ID) INNER JOIN cdp.disponibiliza ON apostasCasa.ID = ID_APOSTA WHERE Nome_CAP = @BookerName;
 		END
 		
 		FETCH NEXT FROM Jogos_Cursor INTO
@@ -372,13 +374,28 @@ AS
 	END
 	CLOSE Jogos_Cursor
 	DEALLOCATE Jogos_Cursor
+
+	DECLARE @toDelete INT;
+
+	DECLARE Apagar_Cursor CURSOR FOR 
+    SELECT ID FROM @apostasParaApagar
+
+	OPEN Apagar_Cursor;
+
+	FETCH NEXT FROM Apagar_Cursor INTO
+    @toDelete;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DELETE FROM cdp.aposta_normal WHERE ID = @toDelete;
+
+		FETCH NEXT FROM Apagar_Cursor INTO
+		@toDelete;
+	END
+
 GO
 
 -- DROP PROCEDURE cdp.deleteAllBetsOfAGameInABooker;
-
-EXEC cdp.deleteAllBetsOfAGameInABooker 1, 'Leon-Hampton';
-SELECT * from cdp.casa_de_apostas;
-SELECT * from cdp.aposta_normal;
 
 -- aux stored procedure to disable all triggers
 CREATE PROCEDURE utils.disableAllTriggers
