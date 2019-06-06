@@ -83,6 +83,18 @@
     <Compile Include="listaJogosApostadorX.Designer.cs">
       <DependentUpon>listaJogosApostadorX.cs</DependentUpon>
     </Compile>
+    <Compile Include="newComp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="newComp.Designer.cs">
+      <DependentUpon>newComp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NovaAposta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NovaAposta.Designer.cs">
+      <DependentUpon>NovaAposta.cs</DependentUpon>
+    </Compile>
     <Compile Include="NovaCasa.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +138,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="listaJogosApostadorX.resx">
       <DependentUpon>listaJogosApostadorX.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="newComp.resx">
+      <DependentUpon>newComp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NovaAposta.resx">
+      <DependentUpon>NovaAposta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NovaCasa.resx">
       <DependentUpon>NovaCasa.cs</DependentUpon>

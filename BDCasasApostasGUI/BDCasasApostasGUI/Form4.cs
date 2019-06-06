@@ -43,6 +43,7 @@ namespace BDCasasApostasGUI
                     //MessageBox.Show("Casa removida com sucesso!", " ", MessageBoxButtons.OK);
 
                 }
+                MessageBox.Show("Casa removida com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dr.Close();
                 dr.Dispose();
                 cn1.Close();

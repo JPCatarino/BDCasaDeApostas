@@ -11,9 +11,9 @@ using System.Data.SqlClient;
 
 namespace BDCasasApostasGUI
 {
-    public partial class RemoverJogo : Form
+    public partial class NovaAposta : Form
     {
-        public RemoverJogo()
+        public NovaAposta()
         {
             InitializeComponent();
         }
@@ -21,46 +21,21 @@ namespace BDCasasApostasGUI
         SqlConnection cn1 = new SqlConnection("Data Source = " + "tcp:mednat.ieeta.pt\\SQLSERVER,8101" + " ;" + "Initial Catalog = " + "p3g6" +
      "; uid = " + "p3g6" + ";" + "password = " + "Javardices123");
 
-
-        private void label1_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
+            cn1.Open();
 
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char ch = e.KeyChar;
-
-            if(!Char.IsDigit(ch) && ch != 8 && ch != 46) //digitos, backspace e delete
-            {
-                e.Handled = true;
-
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-           cn1.Open();
-           
             // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
 
-            SqlCommand cm = new SqlCommand("cdp.deleteAllBetsOfAGameInABooker", cn1);
+            SqlCommand cm = new SqlCommand("cdp.AssociateBetWithGameAndBooker", cn1);
             cm.CommandType = CommandType.StoredProcedure;
 
-            cm.Parameters.Add("@BookerName", SqlDbType.VarChar).Value = Form2.comboBox1.SelectedItem.ToString();
-            cm.Parameters.Add("@GameID", SqlDbType.VarChar).Value = textBox1.Text;
-            MessageBox.Show("Apostas eliminadas com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = Form2.comboBox1.GetItemText(Form2.comboBox1.SelectedItem);
+            cm.Parameters.Add("@GameID", SqlDbType.VarChar).Value = textBox7.Text;
+            cm.Parameters.Add("@BetID", SqlDbType.VarChar).Value = textBox3.Text;
+            
+
 
             try
             {
@@ -71,20 +46,24 @@ namespace BDCasasApostasGUI
                     //comboBox1.Items.Add(dr["Primeiro_Nome"]);
 
                 }
+                MessageBox.Show("Aposta associada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dr.Close();
                 dr.Dispose();
                 cn1.Close();
 
-                               
+
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
 
+        private void NovaAposta_Load(object sender, EventArgs e)
+        {
 
-
+            textBox1.Text = Form2.comboBox1.GetItemText(Form2.comboBox1.SelectedItem);
         }
     }
 }

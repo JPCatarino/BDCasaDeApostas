@@ -46,6 +46,7 @@ namespace BDCasasApostasGUI
                     
 
                 }
+                MessageBox.Show("Casa adicionada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dr.Close();
                 dr.Dispose();
                 cn1.Close();

@@ -313,5 +313,17 @@ namespace BDCasasApostasGUI
         {
 
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            var comp = new newComp();
+            comp.Show();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            var na = new NovaAposta();
+            na.Show();
+        }
     }
 }
