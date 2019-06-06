@@ -322,8 +322,14 @@ namespace BDCasasApostasGUI
 
         private void button7_Click(object sender, EventArgs e)
         {
-            var na = new NovaAposta();
+            var na = new NovaAssociacao();
             na.Show();
+        }
+
+        private void button11_Click_1(object sender, EventArgs e)
+        {
+            var nova = new CriarNovaAposta();
+            nova.Show();
         }
     }
 }

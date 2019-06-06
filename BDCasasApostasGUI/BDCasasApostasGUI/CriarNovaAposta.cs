@@ -11,9 +11,9 @@ using System.Data.SqlClient;
 
 namespace BDCasasApostasGUI
 {
-    public partial class NovaAssociacao : Form
+    public partial class CriarNovaAposta : Form
     {
-        public NovaAssociacao()
+        public CriarNovaAposta()
         {
             InitializeComponent();
         }
@@ -27,14 +27,16 @@ namespace BDCasasApostasGUI
 
             // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
 
-            SqlCommand cm = new SqlCommand("cdp.AssociateBetWithGameAndBooker", cn1);
+            SqlCommand cm = new SqlCommand("cdp.addNewAposta", cn1);
             cm.CommandType = CommandType.StoredProcedure;
 
 
-            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = Form2.comboBox1.GetItemText(Form2.comboBox1.SelectedItem);
-            cm.Parameters.Add("@GameID", SqlDbType.VarChar).Value = textBox7.Text;
-            cm.Parameters.Add("@BetID", SqlDbType.VarChar).Value = textBox3.Text;
-            
+            cm.Parameters.Add("@NameBooker", SqlDbType.VarChar).Value = Form2.comboBox1.GetItemText(Form2.comboBox1.SelectedItem);
+            cm.Parameters.Add("@IDJogo", SqlDbType.VarChar).Value = textBox7.Text;
+            cm.Parameters.Add("@Descricao", SqlDbType.VarChar).Value = textBox3.Text;
+            cm.Parameters.Add("@odd", SqlDbType.VarChar).Value = textBox2.Text;
+            cm.Parameters.Add("@Data", SqlDbType.VarChar).Value = textBox4.Text;
+
 
 
             try
@@ -43,10 +45,10 @@ namespace BDCasasApostasGUI
 
                 while (dr.Read())
                 {
-                    //comboBox1.Items.Add(dr["Primeiro_Nome"]);
+                    
 
                 }
-                MessageBox.Show("Aposta associada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Aposta criada com sucesso!", " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dr.Close();
                 dr.Dispose();
                 cn1.Close();
@@ -60,9 +62,8 @@ namespace BDCasasApostasGUI
             }
         }
 
-        private void NovaAposta_Load(object sender, EventArgs e)
+        private void CriarNovaAposta_Load(object sender, EventArgs e)
         {
-
             textBox1.Text = Form2.comboBox1.GetItemText(Form2.comboBox1.SelectedItem);
         }
     }
