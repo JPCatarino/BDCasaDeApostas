@@ -149,4 +149,4 @@ CREATE TABLE cdp.relacionada_com(
 
 -- Indexes
 CREATE INDEX idxTeamPlayers ON cdp.jogador(Nome,Posicao);
-CREATE INDEX idxFazIdAposta ON cdp.jogador(ID_aposta);
+CREATE INDEX idxFazIdAposta ON cdp.faz(ID_aposta);
