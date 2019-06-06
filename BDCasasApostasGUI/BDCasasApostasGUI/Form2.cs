@@ -57,8 +57,8 @@ namespace BDCasasApostasGUI
             SqlCommand cm = new SqlCommand("cdp.ListBettersPerBooker", cn1);
             cm.CommandType = CommandType.StoredProcedure;
 
-            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedItem.ToString();
-            
+            cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.GetItemText(comboBox1.SelectedItem);
+
             //Deve ser usada esta de baixo, mas falta meter apostadores por casa.
             //cm.Parameters.Add("@Name_Booker", SqlDbType.VarChar).Value = comboBox1.SelectedValue.ToString();
 
@@ -122,10 +122,11 @@ namespace BDCasasApostasGUI
             button4.Enabled = true;
             button5.Enabled = true;
             button6.Enabled = true;
-            button7.Enabled = true;
+            
             button8.Enabled = true;
             button9.Enabled = true;
             button10.Enabled = true;
+            button11.Enabled = true;
 
         }
 
@@ -282,10 +283,11 @@ namespace BDCasasApostasGUI
             button4.Enabled = false;
             button5.Enabled = false;
             button6.Enabled = false;
-            button7.Enabled = false;
+            
             button8.Enabled = false;
             button9.Enabled = false;
             button10.Enabled = false;
+            button11.Enabled = false;
         }
 
         private void button10_Click(object sender, EventArgs e)
