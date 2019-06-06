@@ -146,3 +146,7 @@ CREATE TABLE cdp.relacionada_com(
 	CONSTRAINT	FK_JOGO_APOSTAM		FOREIGN KEY(ID_Aposta, Combinacoes_aposta) REFERENCES cdp.aposta_multipla(ID, Combinacoes),
 	CONSTRAINT	FK_JOGO_JOGO		FOREIGN KEY(ID_Jogo)	REFERENCES	cdp.jogo(ID)
 );
+
+-- Indexes
+CREATE INDEX idxTeamPlayers ON cdp.jogador(Nome,Posicao);
+CREATE INDEX idxFazIdAposta ON cdp.jogador(ID_aposta);
