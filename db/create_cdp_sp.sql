@@ -19,8 +19,10 @@ AS
 		PRINT 'Insert the ID of the Booker'
 		RETURN 0
 	END
-	SELECT Primeiro_Nome, Ultimo_Nome, Telemovel, NIF  FROM cdp.apostador LEFT JOIN cdp.aposta_em ON Nome_CAP = @Name_Booker GROUP BY Primeiro_Nome, Ultimo_Nome, Telemovel, NIF;
+	SELECT Primeiro_Nome, Ultimo_Nome, Telemovel, NIF  FROM (cdp.apostador LEFT JOIN cdp.aposta_em ON Nome_CAP = @Name_Booker) WHERE Nome_CAP IS NOT NULL GROUP BY Primeiro_Nome, Ultimo_Nome, Telemovel, NIF;
 GO
+
+-- drop procedure cdp.ListBettersPerBooker
 
 -- Stored Proc to list game with available bets per booker 
 CREATE PROCEDURE cdp.ListAvailableGamesPerBooker @Name_Booker VARCHAR(255)
@@ -466,6 +468,13 @@ AS
 GO 
 
 -- DROP PROCEDURE cdp.addNewCompetition;
+
+CREATE PROCEDURE cdp.sp_AverageBetsPerTeam @TeamID INT
+AS
+	SELECT cdp.AverageTeamGamesBets(@TeamID)
+GO
+-- drop procedure cdp.sp_AverageBetsPerTeam
+
 
 -- aux stored procedure to disable all triggers
 CREATE PROCEDURE utils.disableAllTriggers
