@@ -72,11 +72,11 @@ namespace BDCasasApostasGUI
         {
             mainMenu = new MainMenu();
             popUpMenu = new ContextMenu();
-            popUpMenu.MenuItems.Add("Hello", new EventHandler(pop_Clicked));
+            
             this.ContextMenu = popUpMenu;
             MenuItem File = mainMenu.MenuItems.Add("&File");
-            File.MenuItems.Add(new MenuItem("&New", new EventHandler(this.FileNew_clicked), Shortcut.CtrlN));
-            File.MenuItems.Add(new MenuItem("&Open", new EventHandler(this.FileOpen_clicked), Shortcut.CtrlO));
+            
+           
             File.MenuItems.Add(new MenuItem("-"));
             File.MenuItems.Add(new MenuItem("&Exit", new EventHandler(this.FileExit_clicked), Shortcut.CtrlX));
             this.Menu = mainMenu;
@@ -97,14 +97,7 @@ namespace BDCasasApostasGUI
 
 
         }
-        private void FileOpen_clicked(object sender, EventArgs e)
-        {
-            MessageBox.Show("Open", "MENU_CREATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-        private void pop_Clicked(object sender, EventArgs e)
-        {
-            MessageBox.Show("Popupmenu", "MENU_CREATION", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+       
         private void About_clicked(object sender, EventArgs e)
         {
             MessageBox.Show("Aplicação de gestão de Casas de Apostas");
