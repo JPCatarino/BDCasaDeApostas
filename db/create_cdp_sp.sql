@@ -1,3 +1,9 @@
+-- SG Casa de Apostas
+-- Jorge Catarino - https://github.com/JPCatarino/
+-- Oscar Pimentel - https://github.com/OscarPimentelOP
+
+-- Stored Procedures
+
 --use SGCasaDEApostas;
 --go
 
@@ -182,7 +188,7 @@ CREATE PROCEDURE cdp.AddNewGameAndBets (
 AS
 	if utils.IsNullOrEmpty(@Name_Comp) = 1
 	BEGIN
-		print 'Missing competition name' 
+		RAISERROR( 'Missing competition name', 16, 1)
 		return 0
 	END 
 
@@ -191,7 +197,7 @@ AS
 
 	if cdp.IsGameSetDuringCompetition(@Game_Date, @compID) = 0
 	BEGIN
-		print 'Game is not set between the competition date'
+		RAISERROR('Game is not set between the competition date', 16, 1)
 		return 0 
 	END
 
@@ -215,7 +221,7 @@ CREATE PROCEDURE cdp.ListGamesPerCompetition @Name_Booker VARCHAR(255), @Name_Co
 AS
 	if utils.IsNullOrEmpty(@Name_Comp) = 1
 	BEGIN
-		print 'Missing competition name' 
+		RAISERROR( 'Missing competition name', 16, 1)
 		return 0
 	END 
 

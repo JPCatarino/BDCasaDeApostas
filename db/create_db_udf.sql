@@ -1,3 +1,9 @@
+-- SG Casa de Apostas
+-- Jorge Catarino - https://github.com/JPCatarino/
+-- Oscar Pimentel - https://github.com/OscarPimentelOP
+
+-- UDF
+
 use p3g6;
 GO
 
