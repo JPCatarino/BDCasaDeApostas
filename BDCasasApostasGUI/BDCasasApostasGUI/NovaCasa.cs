@@ -56,6 +56,7 @@ namespace BDCasasApostasGUI
             {
                 MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            cn1.Close();
         }
     }
 }

@@ -51,6 +51,7 @@ namespace BDCasasApostasGUI
 
 
 
+
             
 
 
@@ -201,19 +202,16 @@ namespace BDCasasApostasGUI
             {
                 comboBox2.Enabled = true;
             }
-
             else
             {
                 comboBox2.Enabled = false;
-               
             }
 
             comboBox2.Items.Clear();
             
-
             SqlCommand cm = new SqlCommand("cdp.listAllTeamsOnACompetition", cn1);
             cm.CommandType = CommandType.StoredProcedure;
-            //cn2.Open();
+            
             SqlCommand cm2 = new SqlCommand("cdp.GetCompetitionID", cn1);
             cm2.CommandType = CommandType.StoredProcedure;
             cm2.Parameters.Add("@Name_Comp", SqlDbType.VarChar).Value = comboBox1.GetItemText(comboBox1.SelectedItem);
@@ -221,18 +219,12 @@ namespace BDCasasApostasGUI
             cm2.Parameters.Add("@ID_Comp", SqlDbType.Int).Direction = ParameterDirection.Output;
             cm2.ExecuteNonQuery();
             int retval = (int)cm2.Parameters["@ID_Comp"].Value;
-
-
-
             cm.Parameters.Add("@CompID", SqlDbType.VarChar).Value = retval;
-
-            //cn2.Close();
-
-
+                 
             try
             {
                 SqlDataReader dr = cm.ExecuteReader();
-                // SqlDataReader dr2 = cm2.ExecuteReader();
+                
 
                 while (dr.Read())
                 {
@@ -241,8 +233,6 @@ namespace BDCasasApostasGUI
                 }
                 dr.Close();
                 dr.Dispose();
-
-
 
             }
             catch (Exception ex)
@@ -263,6 +253,7 @@ namespace BDCasasApostasGUI
             chart2.Series["GS"].Points.Clear();
 
             dt.Clear();
+            
 
 
 
@@ -388,6 +379,51 @@ namespace BDCasasApostasGUI
         {
             var trocateam = new TrocaEquipas();
             trocateam.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SqlCommand cm = new SqlCommand("cdp.sp_AverageBetsPerTeam", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
+
+
+            SqlCommand cm2 = new SqlCommand("cdp.GetTeamID", cn1);
+            cm2.CommandType = CommandType.StoredProcedure;
+            cm2.Parameters.Add("@Name_Team", SqlDbType.VarChar).Value = comboBox2.GetItemText(comboBox2.SelectedItem);
+            cm2.Parameters.Add("@ID_Team", SqlDbType.Int).Direction = ParameterDirection.Output;
+            cm2.ExecuteNonQuery();
+            int retval = (int)cm2.Parameters["@ID_Team"].Value;
+
+
+
+            cm.Parameters.Add("@TeamID", SqlDbType.VarChar).Value = retval;
+
+
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+
+                while (dr.Read())
+                {
+
+                    textBox1.Text = dr[0].ToString();
+
+
+
+                }
+                dr.Close();
+                dr.Dispose();
+                //cn1.Close();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
         }
     }
 }
