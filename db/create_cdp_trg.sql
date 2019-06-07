@@ -177,6 +177,51 @@ GO
 
 -- drop trigger cdp.deleteAGame;
 
+CREATE TRIGGER cdp.deleteCasaApostas on cdp.[casa_de_apostas]
+INSTEAD OF DELETE
+AS
+	DECLARE @jogoAtual INT;
+
+	DECLARE @auxJogos TABLE(
+		ID_Jogo INT,
+		ID_casa VARCHAR(MAX),
+		ID_fora VARCHAR(MAX),
+		Data	DATETIME);
+
+	DECLARE @auxApostas TABLE(
+	ID		INT,
+	Descricao VARCHAR(MAX), 
+	Odds DECIMAL(4,2), 
+	DataHora DATETIME);
+
+	DECLARE @NomeBooker VARCHAR(MAX);
+
+	SELECT @NomeBooker = Nome from deleted;
+
+	INSERT INTO @auxJogos EXEC cdp.ListAvailableGamesPerBooker @NomeBooker;
+
+	DECLARE JogosCAP_Cursor CURSOR FOR 
+    SELECT ID_Jogo FROM @auxJogos
+
+	OPEN JogosCAP_Cursor;
+
+	FETCH NEXT FROM JogosCAP_Cursor INTO
+    @jogoAtual;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		EXEC cdp.deleteAllBetsOfAGameInABooker @jogoAtual, @NomeBooker;
+		FETCH NEXT FROM JogosCAP_Cursor INTO
+		@jogoAtual;
+	END
+	CLOSE JogosCAP_Cursor
+	DEALLOCATE JogosCAP_Cursor
+
+	DELETE FROM cdp.aposta_em WHERE Nome_CAP = @NomeBooker;
+
+	DELETE FROM cdp.casa_de_apostas WHERE Nome = @NomeBooker;
+GO
+
 CREATE TRIGGER cdp.deleteAGame on cdp.[jogo]
 INSTEAD OF DELETE
 AS
