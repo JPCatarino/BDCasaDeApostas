@@ -23,7 +23,7 @@ namespace BDCasasApostasGUI
 
         private void TrocaEquipas_Load(object sender, EventArgs e)
         {
-            textBox1.Text = infoequipas.comboBox2.GetItemText(comboBox2.SelectedItem);
+            textBox1.Text = infoequipas.comboBox2.GetItemText(infoequipas.comboBox2.SelectedItem);
             //infoequipas.comboBox2.SelectedValue.ToString();
 
 
@@ -39,7 +39,7 @@ namespace BDCasasApostasGUI
 
             SqlCommand cm2 = new SqlCommand("cdp.GetTeamID", cn1);
             cm2.CommandType = CommandType.StoredProcedure;
-            cm2.Parameters.Add("@Name_Team", SqlDbType.VarChar).Value = infoequipas.comboBox2.GetItemText(comboBox2.SelectedItem);
+            cm2.Parameters.Add("@Name_Team", SqlDbType.VarChar).Value = infoequipas.comboBox2.GetItemText(infoequipas.comboBox2.SelectedItem);
             cm2.Parameters.Add("@ID_Team", SqlDbType.Int).Direction = ParameterDirection.Output;
             cm2.ExecuteNonQuery();
             int retval = (int)cm2.Parameters["@ID_Team"].Value;
@@ -79,6 +79,63 @@ namespace BDCasasApostasGUI
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
+
+            SqlCommand cm = new SqlCommand("cdp.changePlayersTeam", cn1);
+            cm.CommandType = CommandType.StoredProcedure;
+
+
+            SqlCommand cm2 = new SqlCommand("cdp.GetTeamID", cn1);
+            cm2.CommandType = CommandType.StoredProcedure;
+            cm2.Parameters.Add("@Name_Team", SqlDbType.VarChar).Value = textBox1.Text;
+            cm2.Parameters.Add("@ID_Team", SqlDbType.Int).Direction = ParameterDirection.Output;
+            cm2.ExecuteNonQuery();
+            int retval = (int)cm2.Parameters["@ID_Team"].Value;
+
+            SqlCommand cm3 = new SqlCommand("cdp.GetTeamID", cn1);
+            cm3.CommandType = CommandType.StoredProcedure;
+            cm3.Parameters.Add("@Name_Team", SqlDbType.VarChar).Value = textBox2.Text;
+            cm3.Parameters.Add("@ID_Team", SqlDbType.Int).Direction = ParameterDirection.Output;
+            cm3.ExecuteNonQuery();
+            int retval2 = (int)cm3.Parameters["@ID_Team"].Value;
+
+
+
+            cm.Parameters.Add("@PlayerName", SqlDbType.VarChar).Value = comboBox2.GetItemText(comboBox2.SelectedItem);
+            cm.Parameters.Add("@Equipa_Atual", SqlDbType.VarChar).Value = retval;
+            cm.Parameters.Add("@Equipa_Nova", SqlDbType.VarChar).Value = retval2;
+
+
+
+
+            try
+            {
+                SqlDataReader dr = cm.ExecuteReader();
+                // SqlDataReader dr2 = cm2.ExecuteReader();
+
+
+
+                while (dr.Read())
+                {
+                    
+
+                }
+                dr.Close();
+                dr.Dispose();
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
     }

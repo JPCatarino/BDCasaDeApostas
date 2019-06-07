@@ -24,6 +24,7 @@ namespace BDCasasApostasGUI
 
        SqlConnection cn1 = new SqlConnection("Data Source = " + "tcp:mednat.ieeta.pt\\SQLSERVER,8101" + " ;" + "Initial Catalog = " + "p3g6" +
       "; uid = " + "p3g6" + ";" + "password = " + "Javardices123");
+        int count = 0;
 
         DataTable dt = new DataTable();
 
@@ -132,6 +133,7 @@ namespace BDCasasApostasGUI
 
         private void populate_Click(object sender, EventArgs e)
         {
+            
             cn1.Open();
            // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
 
@@ -207,7 +209,20 @@ namespace BDCasasApostasGUI
             dt.Clear();
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
-            dataGridView1.Columns.Clear();
+
+             if(count != 0)
+            {
+                while (count != 0)
+                {
+                    count--;
+                    dataGridView1.Columns.RemoveAt(count);
+
+                }
+
+
+
+            }
+            
               //cn1.Open();
               // SqlCommand cm = new SqlCommand("SELECT Nome from cdp.casa_de_apostas;", cn1);
 
@@ -223,7 +238,7 @@ namespace BDCasasApostasGUI
 
                 while (dr.Read())
                 {
-                    
+                   
                    
                 }
                 dr.Close();
@@ -234,6 +249,10 @@ namespace BDCasasApostasGUI
                 adapter.Fill(dt);
                 dataGridView1.DataSource = dt;
                 dataGridView1.DataMember = dt.TableName;
+
+                
+
+                count = Int32.Parse(dt.Columns.Count.ToString());
 
 
 
